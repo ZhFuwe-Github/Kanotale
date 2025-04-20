@@ -1,0 +1,24 @@
+# ninja log v6
+15	261	7668493109873228	kanotale_autogen/timestamp	d3a252b98e351976
+824	3863	7668475342876958	CMakeFiles/kanotale.dir/kanotale_autogen/mocs_compilation.cpp.obj	ebb2c02290986280
+15	261	7668493109873228	kanotale_autogen/mocs_compilation.cpp	d3a252b98e351976
+15	261	7668493109873228	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/mocs_compilation.cpp	d3a252b98e351976
+15	261	7668493109873228	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/timestamp	d3a252b98e351976
+263	3198	7668493112356978	CMakeFiles/kanotale.dir/widget.cpp.obj	11e7ad4b1225e29e
+836	4166	7668475342995515	CMakeFiles/kanotale.dir/main.cpp.obj	346877b4b9ed3478
+3198	3541	7668493141708259	kanotale.exe	69151f5faff3add6
+247	428	7664320701913730	kanotale_autogen/EWIEGA46WW/qrc_resource.cpp	8486123c405211a0
+247	428	7664320701913730	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/EWIEGA46WW/qrc_resource.cpp	8486123c405211a0
+439	542	7664320702549298	CMakeFiles/kanotale.dir/kanotale_autogen/EWIEGA46WW/qrc_resource.cpp.obj	4f1b3cdca1376b94
+277	2935	7665179263900984	CMakeFiles/kanotale.dir/form.cpp.obj	7c2c195cba802c2a
+6	821	7665197323144327	build.ninja	cf7286b92d8111ba
+273	2907	7668493112466943	CMakeFiles/kanotale.dir/settings.cpp.obj	2dc2935be62eaa17
+21	908	7668493576259095	kanotale_autogen/timestamp	d3a252b98e351976
+21	908	7668493576259095	kanotale_autogen/mocs_compilation.cpp	d3a252b98e351976
+21	908	7668493576259095	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/timestamp	d3a252b98e351976
+21	908	7668493576259095	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/mocs_compilation.cpp	d3a252b98e351976
+909	4453	7668493577431427	CMakeFiles/kanotale.dir/kanotale_autogen/mocs_compilation.cpp.obj	ebb2c02290986280
+950	4464	7668493577848655	CMakeFiles/kanotale.dir/settings.cpp.obj	2dc2935be62eaa17
+935	4657	7668493577691319	CMakeFiles/kanotale.dir/widget.cpp.obj	11e7ad4b1225e29e
+922	4664	7668493577565137	CMakeFiles/kanotale.dir/main.cpp.obj	346877b4b9ed3478
+4664	4991	7668493614976961	kanotale.exe	69151f5faff3add6
