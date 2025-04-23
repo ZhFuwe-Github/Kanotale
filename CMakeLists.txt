@@ -24,6 +24,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         settings.h settings.cpp settings.ui
+        playerheartitem.h
+        bulletitem.h
+        bulletitem.cpp
+        playerheartitem.cpp
+        linearbulletitem.h
+        linearbulletitem.cpp
 
 
 

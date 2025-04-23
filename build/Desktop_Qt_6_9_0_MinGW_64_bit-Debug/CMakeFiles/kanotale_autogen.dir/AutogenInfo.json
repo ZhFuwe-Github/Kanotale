@@ -362,6 +362,24 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/QTprojects/kanotale/bulletitem.h",
+			"MU",
+			"EWIEGA46WW/moc_bulletitem.cpp",
+			null
+		],
+		[
+			"D:/QTprojects/kanotale/linearbulletitem.h",
+			"MU",
+			"EWIEGA46WW/moc_linearbulletitem.cpp",
+			null
+		],
+		[
+			"D:/QTprojects/kanotale/playerheartitem.h",
+			"MU",
+			"EWIEGA46WW/moc_playerheartitem.cpp",
+			null
+		],
+		[
 			"D:/QTprojects/kanotale/settings.h",
 			"MU",
 			"EWIEGA46WW/moc_settings.cpp",
@@ -445,7 +463,10 @@
 	"SETTINGS_FILE" : "D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/CMakeFiles/kanotale_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/QTprojects/kanotale/bulletitem.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/linearbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/main.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/playerheartitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/settings.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/widget.cpp", "MU", null ]
 	],

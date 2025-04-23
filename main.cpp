@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
         "}"
 
         "QPushButton:focus {"
-        //"    border: 1px solid rgb(42, 130, 218);"
         "}"
 
         "QPushButton:pressed {"
@@ -65,7 +64,6 @@ int main(int argc, char *argv[])
         "QPushButton:disabled {"
         "    background-color: rgb(60, 60, 60);"
         "    color: rgb(120, 120, 120);"
-        //"    border-color: rgb(0, 0, 0);"
         "    border: 1px solid rgb(0, 0, 0);"
         "}"
         );

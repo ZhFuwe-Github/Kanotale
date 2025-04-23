@@ -1,6 +1,11 @@
 D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/EWIEGA46WW/moc_widget.cpp: D:/QTprojects/kanotale/widget.h \
   D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/moc_predefs.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/QEvent \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/QList \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/QObject \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/QRect \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/QSize \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/QSizeF \
   D:/Qt/6.9.0/mingw_64/include/QtCore/QTimer \
   D:/Qt/6.9.0/mingw_64/include/QtCore/q17memory.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/q20functional.h \
@@ -36,6 +41,8 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qcontainerinfo.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qcontainertools_impl.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qcontiguouscache.h \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/qcoreapplication.h \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/qcoreapplication_platform.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qcoreevent.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qdarwinhelpers.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qdatastream.h \
@@ -62,6 +69,7 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qlatin1stringview.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qline.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qlist.h \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/qlocale.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qlogging.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qmalloc.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qmap.h \
@@ -71,6 +79,7 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qmetatype.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qminmax.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qnamespace.h \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/qnativeinterface.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qnumeric.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qobject.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qobject_impl.h \
@@ -136,37 +145,56 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/QCloseEvent \
   D:/Qt/6.9.0/mingw_64/include/QtGui/QFontDatabase \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/QMoveEvent \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/QTransform \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qbitmap.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qbrush.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qcolor.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qcursor.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qevent.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qeventpoint.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qfont.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qfontdatabase.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qfontinfo.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qfontmetrics.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qfontvariableaxis.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qguiapplication.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qguiapplication_platform.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qicon.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qimage.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qinputdevice.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qinputmethod.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qpainter.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpalette.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qpen.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpicture.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qpointingdevice.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpolygon.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qregion.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qrgb.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qscreen.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qscreen_platform.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtextdocument.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qtextoption.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtransform.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qvector2d.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qvectornd.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs_win.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/QGraphicsScene \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/QGraphicsView \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QGridLayout \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QHBoxLayout \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QLabel \
@@ -176,14 +204,18 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QVBoxLayout \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractscrollarea.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qboxlayout.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/qgraphicsscene.h \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/qgraphicsview.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qgridlayout.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qlabel.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayout.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayoutitem.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qprogressbar.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h \
+  D:/Qt/6.9.0/mingw_64/include/QtWidgets/qscrollarea.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qstackedwidget.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \

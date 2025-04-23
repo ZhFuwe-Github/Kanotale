@@ -1,9 +1,19 @@
 #include "widget.h"
 #include "settings.h"
+#include "playerheartitem.h"
+#include "bulletitem.h"
+#include "linearbulletitem.h"
+
+#include "qrandom.h"
+
 #include <QPixmap>
 #include <QFont>
 #include <QDebug>
 #include <QKeyEvent>
+#include <QObject>
+#include <QResizeEvent>
+#include <QPointer>
+#include <qapplication.h>
 
 // --- 设定 ---
 const QString PLAYER_NAME = "小鹿包";
@@ -156,6 +166,38 @@ void BattleWidget::keyPressEvent(QKeyEvent *event)
     QWidget::keyPressEvent(event);
 }
 
+// 定位 gameView
+void BattleWidget::positionGameView() {
+    if (gameView && isVisible()) { // 只在主窗口可见时定位
+        // 获取主窗口当前在全局屏幕上的位置
+        QPoint battleWidgetGlobalPos = mapToGlobal(QPoint(0, 0));
+
+        int targetX = battleWidgetGlobalPos.x(); // 与主窗口左侧对齐
+        int targetY = battleWidgetGlobalPos.y() + height() -550; // 主窗口底部再向上 600px
+
+        gameView->move(targetX, targetY);
+    }
+}
+
+// 处理窗口操作
+void BattleWidget::showEvent(QShowEvent *event) {
+    QWidget::showEvent(event); // 基类实现
+    positionGameView();      // 定位 gameView
+}
+void BattleWidget::moveEvent(QMoveEvent *event) {
+    QWidget::moveEvent(event); // 基类实现
+    positionGameView();    // 定位 gameView
+}
+void BattleWidget::closeEvent(QCloseEvent *event) {
+    // 先关闭 gameView
+    if (gameView) {
+        gameView->close();
+    }
+    // 接受关闭事件，允许窗口关闭
+    event->accept();
+    // 阻止关闭 event->ignore();
+}
+
 // --- 启动对话的方法 ---
 void BattleWidget::startDialogue(const QString& text)
 {
@@ -238,6 +280,8 @@ void BattleWidget::setEnemyEffect(const QString& imagePath)
 // --- 修改玩家 HP 的方法 ---
 void BattleWidget::modifyHp(int amount)
 {
+    if(invincible > 0) return;
+
     int previousHp = playerCurrentHp;
     int newHp = playerCurrentHp + amount;
     newHp = qBound(0, newHp, playerMaxHp);  //检查边界
@@ -253,6 +297,9 @@ void BattleWidget::modifyHp(int amount)
     } else if (amount > 0) {
         // 治疗效果
     }
+
+    //设置无敌帧
+    invincible = 30;
 }
 
 // --- 更新 HP 显示的辅助函数 ---
@@ -334,7 +381,137 @@ void BattleWidget::handleEnemyDefeat()
 
 }
 
+//获取边界值用于 PlayerHeart 检测
+QRectF BattleWidget::getBattleRectInScene() const
+{
+    return battleRectInScene;
+}
 
+void BattleWidget::setupGameScene() {
+    if (!gameView) return;
+
+    gameScene = new QGraphicsScene(this);
+
+    // 设置大范围的场景矩形，原点仍在左上角 (0,0)
+    gameScene->setSceneRect(0, 0, FULL_SCENE_WIDTH, FULL_SCENE_HEIGHT);
+    gameView->setScene(gameScene);
+
+    // 战斗区域在场景中居中
+    qreal battleX = (FULL_SCENE_WIDTH - BATTLE_BOX_WIDTH) / 2.0;
+    qreal battleY = (FULL_SCENE_HEIGHT - BATTLE_BOX_HEIGHT) / 2.0; // 或者根据你的布局调整Y值
+    battleRectInScene = QRectF(battleX, battleY, BATTLE_BOX_WIDTH, BATTLE_BOX_HEIGHT);
+
+    playerHeart = new PlayerHeartItem("./ktresources/images/icon/heart.png");
+    // 使用 battleRectInScene 的中心来定位
+    //playerHeart->setPos(battleRectInScene.center());
+    qDebug()<<battleRectInScene.center();
+    playerHeart->setPos(346,228);
+    playerHeart->setZValue(1);
+    playerHeart->setFlag(QGraphicsItem::ItemIsFocusable);
+    gameScene->addItem(playerHeart);
+
+    // 创建边框
+    QGraphicsRectItem *borderItem = new QGraphicsRectItem(battleRectInScene);
+    QPen borderPen(Qt::white, 2);
+    borderItem->setPen(borderPen);
+    borderItem->setBrush(Qt::NoBrush);
+    borderItem->setZValue(2);
+    gameScene->addItem(borderItem);
+    playerHeart->setFocus(); // 放在 addItem 之后
+
+    // 创建游戏循环定时器
+    gameLoopTimer = new QTimer(this);
+    connect(gameLoopTimer, &QTimer::timeout, this, &BattleWidget::updateGame);
+}
+
+// --- 控制游戏循环 ---
+void BattleWidget::startGameLoop() {
+    if (gameLoopTimer && !gameLoopTimer->isActive()) {
+        playerHeart->setFocus(); // 确保红心有焦点
+        gameLoopTimer->start(GAME_UPDATE_INTERVAL);
+        qDebug() << "Game loop started.";
+        fightButton->setEnabled(false);
+        actButton->setEnabled(false);
+        itemButton->setEnabled(false);
+        mercyButton->setEnabled(false);
+    }
+}
+
+void BattleWidget::stopGameLoop() {
+    if (gameLoopTimer && gameLoopTimer->isActive()) {
+        gameLoopTimer->stop();
+        qDebug() << "Game loop stopped.";
+        fightButton->setEnabled(true);
+        actButton->setEnabled(true);
+        itemButton->setEnabled(true);
+        mercyButton->setEnabled(true);
+    }
+    if (gameView) {
+        gameView->hide();
+    }
+    // 移除场景中的所有弹幕项
+    QList<QGraphicsItem*> items = gameScene->items();
+    for(QGraphicsItem *item : items) {
+        if (qgraphicsitem_cast<BulletItem*>(item)) {
+            gameScene->removeItem(item);
+            delete item;
+        }
+    }
+}
+
+// --- 游戏更新逻辑 ---
+void BattleWidget::updateGame() {
+    if (!gameScene || !playerHeart) return;
+    //qDebug() <<"running updateGame()";
+    // 驱动场景中所有 Item
+    gameScene->advance();
+    // 调用 PlayerHeart 的移动逻辑
+    playerHeart->advance(1);
+
+    // 碰撞检测
+    QList<QGraphicsItem*> colliding_items = playerHeart->collidingItems();
+    for (QGraphicsItem *item : colliding_items) {
+        // 尝试将碰撞项转换为 BulletItem 指针
+        BulletItem *bullet = qgraphicsitem_cast<BulletItem*>(item);
+        if (bullet) {
+            // 玩家扣血
+            modifyHp(-bullet->getDamage());
+            // 移除弹幕
+            gameScene->removeItem(bullet);
+            delete bullet; // 删除弹幕对象
+            // 播放音效
+
+        }
+    }
+
+    // 无敌帧动画
+    if(invincible > 0){
+        invincible-=1;
+        if(invincible%8>=4){playerHeart->setPixmap("./ktresources/images/icon/empty.png");}else{
+            playerHeart->setPixmap("./ktresources/images/icon/heart.png");
+        }
+    }
+    playerHeart->setFocus();
+
+    // 定期生成弹幕
+}
+
+// 单个弹幕测试
+void BattleWidget::spawnBullet() {
+    if (!gameScene) {
+        qWarning() << "ERROR: gameScene is NULL in spawnBullet!";
+        return; // 如果场景无效，直接返回
+    }
+    //qreal startX = QRandomGenerator::global()->bounded(gameScene->sceneRect().width());
+    //qreal startY = gameScene->sceneRect().top(); // 在顶部生成
+    qreal angle = 60.0;
+    qreal speed = 1.0;
+    int damage = 1;
+    LinearBulletItem *bullet = new LinearBulletItem(damage, speed, angle, "./ktresources/images/icon/dot.png");
+    bullet->setPos(100,100);
+    bullet->setZValue(100);
+    gameScene->addItem(bullet);
+}
 
 void BattleWidget::setupUi()
 {
@@ -358,7 +535,6 @@ void BattleWidget::setupUi()
     enemyDialogueLabel->setWordWrap(true);
     enemyDialogueLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     enemyDialogueLabel->setMinimumSize(200, 160);
-    //enemyDialogueLabel->setText("* ...");
 
     enemyEffectLabel = new QLabel(battleBoxFrame);
     enemyEffectLabel->setMinimumSize(200, 370);
@@ -367,7 +543,6 @@ void BattleWidget::setupUi()
     enemyHpProgressBar = new QProgressBar(battleBoxFrame); //敌人血条
     enemyHpProgressBar->setFormat("%p/100");
     enemyHpProgressBar->setTextVisible(true);
-    //enemyHpProgressBar->setAlignment(Qt::AlignCenter);
     enemyHpProgressBar->setFixedHeight(20);
     enemyHpProgressBar->setMaximumWidth(200);
 
@@ -462,11 +637,32 @@ void BattleWidget::setupUi()
     mercyButton1->setFocusPolicy(Qt::StrongFocus);
     escapeButton->setFocusPolicy(Qt::StrongFocus);
 
-    battlePage = new QWidget(actionStackedWidget);
-    battlePage->setStyleSheet("background-color: rgba(50, 50, 50, 150); border: 1px solid cyan;");
-    QLabel* battlePlaceholder = new QLabel("弹幕战斗将在这里进行", battlePage);
-    QVBoxLayout* battleLayout = new QVBoxLayout(battlePage);
-    battleLayout->addWidget(battlePlaceholder, 0, Qt::AlignCenter);
+    battlePage = new QWidget(actionStackedWidget);  // 不再使用
+    // 清空 battlePage 的布局
+    //QLayout *oldLayout = battlePage->layout();
+    //if (oldLayout) {
+    //    QLayoutItem *item;
+    //    while ((item = oldLayout->takeAt(0)) != nullptr) {
+    //        delete item->widget(); // 删除控件
+    //        delete item;          // 删除布局项
+    //    }
+    //    delete oldLayout;         // 删除旧布局
+    //}
+
+    // 创建 gameView，设置父窗口为 BattleWidget
+    gameView = new QGraphicsView(this); // BattleWidget 作为父窗口
+
+    gameView->setObjectName("gameView_TopLevel");
+    gameView->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    gameView->setAttribute(Qt::WA_TranslucentBackground);
+    gameView->setStyleSheet("background: transparent; border: 2px solid cyan;");
+    gameView->setFixedSize(820, 600); // 设置固定大小
+    gameView->hide();
+
+    // 设置游戏场景
+    setupGameScene();
+
+
 
     attackPage = new QWidget(actionStackedWidget);
     QLabel* attackPlaceholder = new QLabel("攻击将在这里进行", attackPage);
@@ -578,9 +774,9 @@ void BattleWidget::setupUi()
     mercyButton->setIcon(QIcon("./ktresources/images/icon/mercy.png"));
 
     QHBoxLayout *bottomLayout=new QHBoxLayout();
-    QPushButton *settingsButton =new QPushButton("设置",battleBoxFrame);
+    settingsButton =new QPushButton("设置",battleBoxFrame);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta0.1",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale beta0.2",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -713,18 +909,14 @@ void BattleWidget::setupStyles()
         "    min-width: 160px;"
         "    max-width: 320px;" // 最大宽度
         "    outline: none;"
-        //"    icon: url(./ktresources/images/icon/empty.png)"
         "}"
-        //"QPushButton:hover {"
-        //"    background-color: #000000;"
-        //"}"
         "QPushButton:focus {"
         "    color: yellow;"
         "    icon: url(./ktresources/images/icon/heart.png);"
-        //"    background-color: #000000;"
         "    outline: none;"
         "}"
         ).arg(pixelFont.family()).arg(pixelFont.pointSize());
+
 
     fightButton->setStyleSheet(buttonStyle);
     actButton->setStyleSheet(buttonStyle);
@@ -752,19 +944,29 @@ void BattleWidget::setupStyles()
 void BattleWidget::onFightClicked()
 {
     startDialogue("* 你选择了 战斗。");
-    actionStackedWidget->setCurrentWidget(attackPage); // 显示战斗菜单页
+    //actionStackedWidget->setCurrentWidget(attackPage);
+    actionStackedWidget->setCurrentWidget(battlePage);
     actionStackedWidget->show(); // 确保 StackedWidget 可见
-    modifyEnemyHp(-3);
-    // ... 后续战斗逻辑 ...
+    //modifyEnemyHp(-3);
+
+    if (gameView) {
+        positionGameView(); // 定位
+        gameView->show();   // 显示
+        gameView->raise();  // 提升到顶层
+        gameView->activateWindow();
+        QTimer::singleShot(0, this, [this](){ // 延迟 0ms 意味着在下一个事件循环设置
+                playerHeart->setFocus();
+        });
+        startGameLoop();
+        spawnBullet();
+    }
 }
 
 void BattleWidget::onActClicked()
 {
-    //startDialogue("* 你选择了 行动。");
     startEDialogue("* 不要白费力气。");
     actionStackedWidget->setCurrentWidget(actMenuPage);
-    //setEnemySprite("./ktresources/images/kano/k03.png");
-    setEnemySprite("./ktresources/test.gif");
+    setEnemySprite("./ktresources/images/kano/k03.png");
     actionStackedWidget->show();
     modifyHp(-2);
     // ... ...
@@ -772,7 +974,6 @@ void BattleWidget::onActClicked()
 
 void BattleWidget::onItemClicked()
 {
-    startDialogue("* 你选择了 物品。");
     actionStackedWidget->setCurrentWidget(itemMenuPage);
     actionStackedWidget->show();
     setEnemySprite("./ktresources/images/kano/k02.png");
@@ -781,7 +982,6 @@ void BattleWidget::onItemClicked()
 
 void BattleWidget::onMercyClicked()
 {
-    startDialogue("* 你选择了 仁慈。");
     actionStackedWidget->setCurrentWidget(mercyMenuPage);
     actionStackedWidget->show();
     // ... ...
@@ -797,7 +997,7 @@ void BattleWidget::onSettingsClicked()
     settingsWindow->setHPFixEnabled(this->hpfix);
     //链接信号与槽以应用新设置
     connect(settingsWindow, &Settings::settingsConfirmed,this, &BattleWidget::applySettings);
-
+    settingsButton->setEnabled(false);
     settingsWindow->show();
 }
 
@@ -805,6 +1005,7 @@ void BattleWidget::applySettings(bool soundEnabled, bool hpFixEnabled)
 {
     sound = soundEnabled;
     hpfix = hpFixEnabled;
+    settingsButton->setEnabled(true);
 }
 
 
