@@ -368,6 +368,18 @@
 			null
 		],
 		[
+			"D:/QTprojects/kanotale/fixedbulletitem.h",
+			"MU",
+			"EWIEGA46WW/moc_fixedbulletitem.cpp",
+			null
+		],
+		[
+			"D:/QTprojects/kanotale/homingbulletitem.h",
+			"MU",
+			"EWIEGA46WW/moc_homingbulletitem.cpp",
+			null
+		],
+		[
 			"D:/QTprojects/kanotale/linearbulletitem.h",
 			"MU",
 			"EWIEGA46WW/moc_linearbulletitem.cpp",
@@ -383,6 +395,12 @@
 			"D:/QTprojects/kanotale/settings.h",
 			"MU",
 			"EWIEGA46WW/moc_settings.cpp",
+			null
+		],
+		[
+			"D:/QTprojects/kanotale/warningitem.h",
+			"MU",
+			"EWIEGA46WW/moc_warningitem.cpp",
 			null
 		],
 		[
@@ -464,10 +482,13 @@
 	"SOURCES" : 
 	[
 		[ "D:/QTprojects/kanotale/bulletitem.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/fixedbulletitem.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/homingbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/linearbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/main.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/playerheartitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/settings.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/warningitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/widget.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],

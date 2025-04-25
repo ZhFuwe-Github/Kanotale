@@ -5,7 +5,7 @@
 #include <QDebug>
 
 BulletItem::BulletItem(int damageValue, BulletType bulletType, const QString &pixmapPath, QGraphicsItem *parent)
-    : QGraphicsObject(parent), damage(damageValue), m_bulletType(bulletType)
+    : QGraphicsObject(parent), damage(damageValue), m_bulletType(bulletType),pixmap(pixmapPath)
 {
     if (!pixmapPath.isEmpty()) {
         pixmap.load(pixmapPath);
@@ -17,6 +17,35 @@ BulletItem::BulletItem(int damageValue, BulletType bulletType, const QString &pi
         pixmap = QPixmap(10, 10);
         pixmap.fill(Qt::cyan);
     }
+}
+
+// 实现 paint 方法
+void BulletItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option); // 如果没用到 option 参数，标记为未使用
+    Q_UNUSED(widget);
+
+    // 在 boundingRect 左上角 (0,0) 绘制 pixmap
+    painter->drawPixmap(boundingRect().topLeft(), pixmap);
+}
+
+// 通过路径设置图标
+void BulletItem::setPixmap(const QString &pixmapPath)
+{
+    QPixmap newPixmap(pixmapPath);
+    //setPixmap(newPixmap);
+    if (pixmap.cacheKey() == newPixmap.cacheKey()) {
+        // 如果新旧 Pixmap 相同，无需操作
+        return;
+    }
+
+    // 在改变 boundingRect 之前，通知场景将要发生变化
+    prepareGeometryChange();
+    // 更新存储的 pixmap
+    pixmap = newPixmap;
+
+    // update() 会标记 boundingRect() 区域为无效，并安排重绘
+    update();
 }
 
 QRectF BulletItem::boundingRect() const
@@ -35,13 +64,6 @@ QPainterPath BulletItem::shape() const
     return path;
 }
 
-void BulletItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(option);
-    Q_UNUSED(widget);
-    painter->drawPixmap(boundingRect().topLeft(), pixmap);
-}
-
 void BulletItem::advance(int phase)
 {
     if (phase == 0) return; // 只在移动阶段处理
@@ -54,13 +76,13 @@ void BulletItem::advance(int phase)
     setPos(pos() + QPointF(dx, dy));
 
     // 检查并处理越界
-    if (checkOutOfBounds()) {
-        if (scene()) {
-            qDebug() << "Bullet out of bounds, removing.";
-            scene()->removeItem(this);
-            delete this; // 销毁
-        }
-    }
+    //if (checkOutOfBounds()) {
+    //    if (scene()) {
+    //        qDebug() << "Bullet out of bounds, removing.";
+    //        scene()->removeItem(this);
+    //        delete this; // 销毁
+    //    }
+    //}
 }
 
 bool BulletItem::checkOutOfBounds() {

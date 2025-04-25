@@ -7,6 +7,10 @@ kanotale_autogen/timestamp: \
 	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autogen/moc_predefs.h \
 	D:/QTprojects/kanotale/bulletitem.cpp \
 	D:/QTprojects/kanotale/bulletitem.h \
+	D:/QTprojects/kanotale/fixedbulletitem.cpp \
+	D:/QTprojects/kanotale/fixedbulletitem.h \
+	D:/QTprojects/kanotale/homingbulletitem.cpp \
+	D:/QTprojects/kanotale/homingbulletitem.h \
 	D:/QTprojects/kanotale/linearbulletitem.cpp \
 	D:/QTprojects/kanotale/linearbulletitem.h \
 	D:/QTprojects/kanotale/main.cpp \
@@ -14,11 +18,14 @@ kanotale_autogen/timestamp: \
 	D:/QTprojects/kanotale/playerheartitem.h \
 	D:/QTprojects/kanotale/settings.cpp \
 	D:/QTprojects/kanotale/settings.h \
+	D:/QTprojects/kanotale/warningitem.cpp \
+	D:/QTprojects/kanotale/warningitem.h \
 	D:/QTprojects/kanotale/widget.cpp \
 	D:/QTprojects/kanotale/widget.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QEvent \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QList \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QObject \
+	D:/Qt/6.9.0/mingw_64/include/QtCore/QPointer \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QRect \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QSize \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QSizeF \
@@ -104,6 +111,7 @@ kanotale_autogen/timestamp: \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qoverload.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qpair.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qpoint.h \
+	D:/Qt/6.9.0/mingw_64/include/QtCore/qpointer.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qprocessordetection.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qrect.h \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/qrefcount.h \

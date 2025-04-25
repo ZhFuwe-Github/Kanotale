@@ -3,6 +3,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QPainterPath>
+#include <QPainter>
 
 // 弹幕类型枚举
 enum class BulletType {
@@ -27,6 +28,7 @@ public:
 
     // 公共接口
     int getDamage() const { return damage; }
+    bool getRemovable() {return removable;}
     void setDamage(int d) { damage = d; }
     BulletType getBulletType() const { return m_bulletType; }
 
@@ -37,6 +39,8 @@ public:
 
     // 移动逻辑
     virtual void advance(int phase) override; // 虚函数，允许子类覆盖
+    //void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+    void setPixmap(const QString &pixmapPath);
 
 protected:
     QPixmap pixmap; // 弹幕图像

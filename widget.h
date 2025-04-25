@@ -77,8 +77,13 @@ private:
     void setupGameScene(); // 设置游戏场景
     void startGameLoop();  // 开始游戏循环
     void stopGameLoop();   // 停止游戏循环
-    void spawnBullet();    // 生成弹幕示例
     void updateGame();     // 处理游戏逻辑（碰撞等）
+
+    void spawnBullet();
+    void circleBullet();
+    void spawnHomingAttack();
+    void fistBullet(int x,int y,int angle);
+
 
     void positionGameView(); // 定位 gameView
 
@@ -146,8 +151,8 @@ private:
     QRectF battleRectInScene;
 
     // 战斗区域尺寸
-    const int BATTLE_BOX_WIDTH = 300;
-    const int BATTLE_BOX_HEIGHT = 150;
+    int BATTLE_BOX_WIDTH = 220;
+    int BATTLE_BOX_HEIGHT = 220;
 
     const int GAME_UPDATE_INTERVAL = 16;     // 游戏更新间隔 (毫秒, 60 FPS)
 

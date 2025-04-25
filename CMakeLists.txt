@@ -30,6 +30,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         playerheartitem.cpp
         linearbulletitem.h
         linearbulletitem.cpp
+        homingbulletitem.h
+        homingbulletitem.cpp
+        warningitem.h
+        warningitem.cpp
+        fixedbulletitem.h
+        fixedbulletitem.cpp
 
 
 

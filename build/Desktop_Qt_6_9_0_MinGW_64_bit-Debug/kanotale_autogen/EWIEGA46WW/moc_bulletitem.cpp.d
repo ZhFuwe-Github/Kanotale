@@ -35,6 +35,7 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qdarwinhelpers.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qdatastream.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qdebug.h \
+  D:/Qt/6.9.0/mingw_64/include/QtCore/qendian.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qexceptionhandling.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qflags.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qfloat16.h \
@@ -124,17 +125,26 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h \
   D:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/QPainter \
   D:/Qt/6.9.0/mingw_64/include/QtGui/QPainterPath \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qbrush.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qcolor.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qfont.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qfontinfo.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qfontmetrics.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qfontvariableaxis.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qimage.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qpainter.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpainterpath.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qpen.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qpolygon.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qregion.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qrgb.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h \
+  D:/Qt/6.9.0/mingw_64/include/QtGui/qtextoption.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h \
