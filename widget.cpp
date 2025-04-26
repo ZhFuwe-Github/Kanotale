@@ -19,6 +19,7 @@
 #include <QResizeEvent>
 #include <QPointer>
 #include <QtMath>
+#include <QApplication>
 #include <qapplication.h>
 
 // --- 设定 ---
@@ -130,25 +131,38 @@ void BattleWidget::loadSmallCustomFont()
 // 设置按钮Enter键确认和自动聚焦
 bool BattleWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    // 尝试将被观察对象转换为 QPushButton
+    // 处理鼠标悬停自动聚焦
     QPushButton *button = qobject_cast<QPushButton*>(watched);
-    // 检查是否转换成功，并且事件是鼠标进入
-    if (button && event->type() == QEvent::Enter)
-    {
-        //设置焦点
-        button->setFocus();
-    }
-    else if (event->type() == QEvent::KeyPress)
-    {
-        // 将通用事件指针转换为键盘事件指针
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-        // 检查按下的键是否是 Enter
-        if (keyEvent->key() == Qt::Key_Enter)
-        {
-            button->animateClick();
-            return true;
+    if (button && event->type() == QEvent::Enter) {
+        bool gameViewHasFocus = false;
+        if (gameScene && gameScene->focusItem()) {
+            gameViewHasFocus = true;
+        }
+        if (!gameViewHasFocus) {
+            button->setFocus();
         }
     }
+    // 处理全局 Enter
+    else if (event->type() == QEvent::KeyPress)
+    {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Enter)
+        {
+            // 检查当前拥有焦点的 Widget
+            QWidget *focused = QApplication::focusWidget();
+            // 尝试将焦点控件转换为 QPushButton
+            QPushButton *focusedButton = qobject_cast<QPushButton*>(focused);
+            // 检查焦点按钮是否是 BattleWidget 的子控件，且不在 QGraphicsView
+            bool gameViewHasFocus = gameScene && gameScene->focusItem();
+            if (focusedButton && focusedButton->window() == this->window() && !gameViewHasFocus)
+            {
+                qDebug() << "Enter pressed, activating focused button:" << focusedButton->text();
+                focusedButton->animateClick(); // 模拟点击
+                return true;
+            }
+        }
+    }
+    // 其他事件基类处理
     return QWidget::eventFilter(watched, event);
 }
 
@@ -169,7 +183,7 @@ void BattleWidget::keyPressEvent(QKeyEvent *event)
             return;
         }
     }
-    // 则调用基类的 keyPressEvent 来处理其他默认按键行为
+    // 调用基类处理其他默认行为
     QWidget::keyPressEvent(event);
 }
 
@@ -451,7 +465,7 @@ void BattleWidget::setupGameScene() {
     borderItem->setBrush(Qt::NoBrush);
     borderItem->setZValue(2);
     gameScene->addItem(borderItem);
-    playerHeart->setFocus();
+    //playerHeart->setFocus();
 
     // 创建游戏循环定时器
     gameLoopTimer = new QTimer(this);
@@ -467,7 +481,7 @@ void BattleWidget::setupGameScene() {
 // --- 控制游戏循环 ---
 void BattleWidget::startGameLoop() {
     if (gameLoopTimer && !gameLoopTimer->isActive()) {
-        playerHeart->setFocus(); // 确保红心有焦点
+        //playerHeart->setFocus(); // 确保红心有焦点
         gameLoopTimer->start(GAME_UPDATE_INTERVAL);
         qDebug() << "Game loop started.";
         fightButton->setEnabled(false);
@@ -484,6 +498,7 @@ void BattleWidget::startGameLoop() {
 }
 
 void BattleWidget::stopGameLoop() {
+
     if (gameLoopTimer && gameLoopTimer->isActive()) {
         gameLoopTimer->stop();
         batchSpawnTimer->stop();
@@ -496,21 +511,18 @@ void BattleWidget::stopGameLoop() {
     if (gameView) {
         gameView->hide();
     }
+
     // 移除attackStick
     // --- 在访问前转换为 QPointer ---
     QPointer<AttackStick> safePtr = currentAttackStickPtr;
 
     if (!safePtr.isNull()) { // --- 使用 QPointer 检查有效性 ---
-        //qDebug() << "Recorded attack duration:" << elapsedTime << "ms for stick:" << safePtr;
-        //this->lastAttackDuration = elapsedTime;
-
         if(safePtr->scene()) gameScene->removeItem(safePtr);
         delete safePtr;
         currentAttackStickPtr = nullptr; // 手动置空普通指针
 
     } else {
         qDebug() << "AttackStick pointer was already null when slot was called.";
-        // 确保普通指针也置空，以防万一
         currentAttackStickPtr = nullptr;
     }
     // 移除场景中的所有弹幕项
@@ -530,7 +542,7 @@ void BattleWidget::stopGameLoop() {
         "    background-color: transparent;"
         "    border: none;"
         "}"
-        );
+    );
 }
 
 // --- 游戏更新逻辑 ---
@@ -575,8 +587,9 @@ void BattleWidget::updateGame() {
         }
     }
 
+
     if(playerHeart->isVisible()){
-        playerHeart->setFocus();
+       playerHeart->setFocus();
     }else{
         currentAttackStickPtr->setFocus();
     }
@@ -1272,8 +1285,9 @@ void BattleWidget::setupUi()
 
     QHBoxLayout *bottomLayout=new QHBoxLayout();
     settingsButton =new QPushButton("设置",battleBoxFrame);
+    settingsButton->setFocusPolicy(Qt::NoFocus);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta 0.3",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale beta 0.3.1",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -1382,7 +1396,7 @@ void BattleWidget::setupStyles()
         "}"
         "QPushButton:hover {" // 悬停指示
         "    background-color: #333333;"
-        "    icon: url(./ktresources/images/icon/heart.png);"
+        //"    icon: url(./ktresources/images/icon/heart.png);"
         "}"
         "QPushButton:pressed {" // 按下指示
         "    background-color: #555555;"
@@ -1495,6 +1509,7 @@ void BattleWidget::onItemClicked()
     actionStackedWidget->setCurrentWidget(itemMenuPage);
     actionStackedWidget->show();
     setEnemySprite("./ktresources/images/kano/k02.png");
+    modifyEnemyHp(-3);
     // ... ...
 }
 
@@ -1502,6 +1517,7 @@ void BattleWidget::onMercyClicked()
 {
     actionStackedWidget->setCurrentWidget(mercyMenuPage);
     actionStackedWidget->show();
+    qDebug() << "GameView focus policy set to NoFocus. Current policy:" << gameView->focusPolicy();
     // ... ...
 }
 
