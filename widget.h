@@ -20,6 +20,7 @@
 
 class PlayerHeartItem; // 前向声明
 class BulletItem;
+class AttackStick;
 
 class BattleWidget : public QWidget
 {
@@ -61,6 +62,9 @@ private slots:
     void updateEDialogueText();
     void onSettingsClicked();
     void applySettings(bool soundEnabled, bool hpFixEnabled);
+    void handleBatchSpawn();
+    void handleBatchSpawnW();
+    void onAttackStickStopped(qint64 elapsedTime);    // 接收 AttackStick 停止信号
 
 private:
     void setupUi();
@@ -79,17 +83,37 @@ private:
     void stopGameLoop();   // 停止游戏循环
     void updateGame();     // 处理游戏逻辑（碰撞等）
 
+    void startAttack();
+    //QPointer<AttackStick> currentAttackStick = nullptr;
+    AttackStick *currentAttackStickPtr = nullptr;
+    qint64 lastAttackDuration = 0;
+
     void spawnBullet();
     void circleBullet();
     void spawnHomingAttack();
+    void noteBullet();
+        //音符弹幕计时
+        QTimer *batchSpawnTimer = nullptr; // 用于分批生成的定时器
+        int currentBatch = 0;         // 当前是第几批
+        int totalBatches = 12;         // 总共要生成的批次数
+        int bulletsPerBatch = 15;     // 每批弹幕数量
+        int batchInterval = 700;     // 每批之间的间隔 (ms)
     void fistBullet(int x,int y,int angle);
-
+    void crossLaserBullet();
+    void noteWaveAttack();
+        //  波浪音符弹幕计时
+        QTimer *batchSpawnTimerW = nullptr; // 用于分批生成的定时器
+        int currentBatchW = 0;         // 当前是第几批
+        int totalBatchesW = 100;         // 总共要生成的批次数
+        //int bulletsPerBatchW = ;     // 每批弹幕数量
+        int batchIntervalW = 50;     // 每批之间的间隔 (ms)
 
     void positionGameView(); // 定位 gameView
 
     QGraphicsScene *gameScene = nullptr;       // 游戏场景
     QGraphicsView *gameView = nullptr;         // 显示场景的视图
     PlayerHeartItem *playerHeart = nullptr;    // 玩家红心图形项
+    QGraphicsRectItem *borderItem = nullptr;   // 移动范围边框显示
     QTimer *gameLoopTimer = nullptr;           // 游戏循环定时器
     //QList<BulletItem*> activeBullets;        // 跟踪活动弹幕
 
@@ -151,8 +175,8 @@ private:
     QRectF battleRectInScene;
 
     // 战斗区域尺寸
-    int BATTLE_BOX_WIDTH = 220;
-    int BATTLE_BOX_HEIGHT = 220;
+    int BATTLE_BOX_WIDTH = 210;
+    int BATTLE_BOX_HEIGHT = 210;
 
     const int GAME_UPDATE_INTERVAL = 16;     // 游戏更新间隔 (毫秒, 60 FPS)
 

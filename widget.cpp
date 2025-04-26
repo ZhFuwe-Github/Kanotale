@@ -6,9 +6,11 @@
 #include "homingbulletitem.h"
 #include "fixedbulletitem.h"
 #include "warningitem.h"
+#include "attackstick.h"
 
 #include "qrandom.h"
 
+#include <QThread>
 #include <QPixmap>
 #include <QFont>
 #include <QDebug>
@@ -153,6 +155,7 @@ bool BattleWidget::eventFilter(QObject *watched, QEvent *event)
 //设置ESC键返回
 void BattleWidget::keyPressEvent(QKeyEvent *event)
 {
+    qDebug() << "BattleWidget focused item:" << (gameScene ? gameScene->focusItem() : nullptr);
     // 检查按下的键是否是 Esc
     if (event->key() == Qt::Key_Escape)
     {
@@ -177,7 +180,7 @@ void BattleWidget::positionGameView() {
         QPoint battleWidgetGlobalPos = mapToGlobal(QPoint(0, 0));
 
         int targetX = battleWidgetGlobalPos.x(); // 与主窗口左侧对齐
-        int targetY = battleWidgetGlobalPos.y() + height() -550; // 主窗口底部再向上 600px
+        int targetY = battleWidgetGlobalPos.y() + height() -600; // 主窗口底部再向上 600px
 
         gameView->move(targetX, targetY);
     }
@@ -281,7 +284,7 @@ void BattleWidget::setEnemyEffect(const QString& imagePath)
     loadAndSetPixmap(enemyEffectLabel, imagePath, ENEMY_SPRITE_TARGET_SIZE);
 }
 
-// --- 修改玩家 HP 的方法 ---
+// --- 修改玩家 HP  ---
 void BattleWidget::modifyHp(int amount)
 {
     if(amount == 0)return;
@@ -430,19 +433,19 @@ void BattleWidget::setupGameScene() {
 
     // 战斗区域在场景中居中
     qreal battleX = (FULL_SCENE_WIDTH - BATTLE_BOX_WIDTH) / 2.0;
-    qreal battleY = (FULL_SCENE_HEIGHT - BATTLE_BOX_HEIGHT - 20) / 2.0;
+    qreal battleY = (FULL_SCENE_HEIGHT - BATTLE_BOX_HEIGHT + 50) / 2.0;
     battleRectInScene = QRectF(battleX, battleY, BATTLE_BOX_WIDTH, BATTLE_BOX_HEIGHT);
 
     playerHeart = new PlayerHeartItem("./ktresources/images/icon/heart.png");
     // playerHeart->setPos(battleRectInScene.center());
     qDebug()<<battleRectInScene.center();
-    playerHeart->setPos(346,228);
+    playerHeart->setPos(346,252);
     playerHeart->setZValue(1);
     playerHeart->setFlag(QGraphicsItem::ItemIsFocusable);
     gameScene->addItem(playerHeart);
 
     // 创建边框
-    QGraphicsRectItem *borderItem = new QGraphicsRectItem(battleRectInScene);
+    borderItem = new QGraphicsRectItem(battleRectInScene);
     QPen borderPen(Qt::white, 2);
     borderItem->setPen(borderPen);
     borderItem->setBrush(Qt::NoBrush);
@@ -453,6 +456,12 @@ void BattleWidget::setupGameScene() {
     // 创建游戏循环定时器
     gameLoopTimer = new QTimer(this);
     connect(gameLoopTimer, &QTimer::timeout, this, &BattleWidget::updateGame);
+
+    batchSpawnTimer = new QTimer(this);
+    connect(batchSpawnTimer, &QTimer::timeout, this, &BattleWidget::handleBatchSpawn);
+
+    batchSpawnTimerW = new QTimer(this);
+    connect(batchSpawnTimerW, &QTimer::timeout, this, &BattleWidget::handleBatchSpawnW);
 }
 
 // --- 控制游戏循环 ---
@@ -477,6 +486,7 @@ void BattleWidget::startGameLoop() {
 void BattleWidget::stopGameLoop() {
     if (gameLoopTimer && gameLoopTimer->isActive()) {
         gameLoopTimer->stop();
+        batchSpawnTimer->stop();
         qDebug() << "Game loop stopped.";
         fightButton->setEnabled(true);
         actButton->setEnabled(true);
@@ -485,6 +495,23 @@ void BattleWidget::stopGameLoop() {
     }
     if (gameView) {
         gameView->hide();
+    }
+    // 移除attackStick
+    // --- 在访问前转换为 QPointer ---
+    QPointer<AttackStick> safePtr = currentAttackStickPtr;
+
+    if (!safePtr.isNull()) { // --- 使用 QPointer 检查有效性 ---
+        //qDebug() << "Recorded attack duration:" << elapsedTime << "ms for stick:" << safePtr;
+        //this->lastAttackDuration = elapsedTime;
+
+        if(safePtr->scene()) gameScene->removeItem(safePtr);
+        delete safePtr;
+        currentAttackStickPtr = nullptr; // 手动置空普通指针
+
+    } else {
+        qDebug() << "AttackStick pointer was already null when slot was called.";
+        // 确保普通指针也置空，以防万一
+        currentAttackStickPtr = nullptr;
     }
     // 移除场景中的所有弹幕项
     QList<QGraphicsItem*> items = gameScene->items();
@@ -547,7 +574,75 @@ void BattleWidget::updateGame() {
             playerHeart->setPixmap("./ktresources/images/icon/heart.png");
         }
     }
-    playerHeart->setFocus();
+
+    if(playerHeart->isVisible()){
+        playerHeart->setFocus();
+    }else{
+        currentAttackStickPtr->setFocus();
+    }
+}
+
+void BattleWidget::startAttack(){
+    if (!gameScene) {return; }
+
+    // 理旧指针
+    QPointer<AttackStick> safeOldPtr = currentAttackStickPtr;
+    if (!safeOldPtr.isNull()) {
+        if(safeOldPtr->scene()) gameScene->removeItem(safeOldPtr);
+        delete safeOldPtr;
+    }
+    currentAttackStickPtr = nullptr; // 置空
+
+    // 创建新实例
+    QPointF startPos(-10, 212);
+    AttackStick *stick = new AttackStick(0, 10, 0, "./ktresources/images/attack/stick.png");
+    if (!stick) return;
+
+    // 存储普通指针
+    currentAttackStickPtr = stick;
+
+    stick->setPos(startPos);
+    stick->setZValue(100);
+    gameScene->addItem(stick);
+
+    // 连接信号槽
+    connect(stick, &AttackStick::stopped, this, &BattleWidget::onAttackStickStopped);
+
+    // UI
+    playerHeart->setVisible(false);
+    borderItem->setVisible(false);
+    battleBoxFrame->setStyleSheet(
+        "QFrame {"
+        "   background-color: black;"
+        "   border: 2px solid white;"
+        "}"
+        "QLabel {"
+        "    background-color: transparent;"
+        "    border: none;"
+        "}"
+        );
+    fightButton->setEnabled(false);
+    actButton->setEnabled(false);
+    itemButton->setEnabled(false);
+    mercyButton->setEnabled(false);
+
+    stick->startMovingTimer();
+    stick->setFocus();
+    qDebug() << "AttackStick spawned and started. Pointer:" << currentAttackStickPtr;
+    QTimer::singleShot(1170, this, [this,stick](){
+        if(stick->getMoving())
+            stick->setVisible(false);
+    });
+    QTimer::singleShot(5000, this, [this](){ stopGameLoop();});
+}
+
+void BattleWidget::onAttackStickStopped(qint64 elapsedTime) {
+    QPointer<AttackStick> safePtr = currentAttackStickPtr;
+    if (!safePtr.isNull()) {
+        this->lastAttackDuration = elapsedTime;
+    }
+    int damage=-elapsedTime*(elapsedTime-1170)/10000;
+    modifyEnemyHp(-damage);
 }
 
 // 弹幕雨
@@ -721,7 +816,213 @@ void BattleWidget::fistBullet(int x,int y,int fistAngle){
     gameView->viewport()->update();
 }
 
+//音符弹幕
+void BattleWidget::noteBullet() {
+    if (batchSpawnTimer->isActive()) {
+        qWarning() << "Note bullet attack already in progress.";
+        return;
+    }
+    setEnemyEffect("./ktresources/images/effect/guitar.png");
+    currentBatch = 0; // 重置批次计数器
 
+    handleBatchSpawn();
+}
+// 定时器触发的槽函数，生成每一批弹幕
+void BattleWidget::handleBatchSpawn() {
+    if (currentBatch >= totalBatches) { // 检查是否所有批次都已生成
+        if (batchSpawnTimer->isActive()) {
+            batchSpawnTimer->stop(); // 停止定时器
+        }
+        qDebug() << "Note bullet attack finished.";
+        return;
+    }
+
+    qDebug() << "Spawning note bullet batch:" << currentBatch + 1;
+
+    qreal centerX = 120;
+    qreal centerY = 120;
+    qreal batchAngleOffset = currentBatch * 18.0; // 计算当前批次的起始角度偏移
+
+    for (int j = 0; j < bulletsPerBatch; ++j) {
+        // 计算位置
+        qreal angleDegrees = j * 24;
+        qreal angleRadians = qDegreesToRadians(angleDegrees);
+        qreal startX = centerX;
+        qreal startY = centerY;
+        QPointF startPos(startX, startY);
+
+        // 移动角度
+        qreal movementAngle = 180.0 + j * 36.0 + batchAngleOffset;
+        qreal speed = 1.5;
+        int damage = 2;
+        QString pixmapPath = "./ktresources/images/bullet/8note.png";
+
+        // 创建、添加弹幕
+        LinearBulletItem *bullet = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
+        if (!bullet) continue;
+        bullet->setPos(startPos);
+        bullet->setZValue(100);
+        if (gameScene) {
+            gameScene->addItem(bullet);
+        } else {
+            qWarning() << "gameScene is null!";
+            delete bullet;
+            continue;
+        }
+    }
+
+    currentBatch++; // 批次计数增加
+    // 启动/保持定时器以生成下一批
+    if (currentBatch < totalBatches) {
+        if (!batchSpawnTimer->isActive() || batchSpawnTimer->interval() != batchInterval) {
+            batchSpawnTimer->start(batchInterval);
+        }
+    } else {
+        // 最后一批，停止定时器
+        if (batchSpawnTimer->isActive()) {
+            batchSpawnTimer->stop();
+        }
+        qDebug() << "Note bullet attack finished after last batch.";
+    }
+    gameView->viewport()->update();
+}
+
+// 波浪音符弹幕
+void BattleWidget::noteWaveAttack() {
+    if (batchSpawnTimerW->isActive()) {
+        qWarning() << "Note wave attack already in progress.";
+        return;
+    }
+
+    currentBatchW = 0; // 重置批次计数器
+
+    handleBatchSpawnW();
+}
+// 定时器触发的槽函数，生成每一批弹幕
+void BattleWidget::handleBatchSpawnW() {
+    if (currentBatchW >= totalBatchesW) { // 检查是否所有批次都已生成
+        if (batchSpawnTimerW->isActive()) {
+            batchSpawnTimerW->stop(); // 停止定时器
+        }
+        qDebug() << "Note wave attack finished.";
+        return;
+    }
+
+    qDebug() << "Spawning note wave batch:" << currentBatch + 1;
+
+    // 计算位置
+    qreal startY = 200+50*qCos(3.1415927*currentBatchW/24);
+    qreal startX = 800;
+    QPointF startPos(startX, startY);
+    QPointF startPos1(startX, startY+140);
+
+    // 移动角度
+    qreal movementAngle = 180.0 ;
+    qreal speed = 22;
+    int damage = 2;
+    QString pixmapPath = "./ktresources/images/bullet/note.png";
+
+    // 创建、添加弹幕
+    LinearBulletItem *bullet = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
+    LinearBulletItem *bullet1 = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
+    bullet->setPos(startPos);
+    bullet1->setPos(startPos1);
+    bullet->setZValue(100);
+    bullet1->setZValue(100);
+    gameScene->addItem(bullet);
+    gameScene->addItem(bullet1);
+
+    currentBatchW++; // 批次计数增加
+    // 启动/保持定时器以生成下一批
+    if (currentBatchW < totalBatchesW) {
+        if (!batchSpawnTimerW->isActive() || batchSpawnTimerW->interval() != batchIntervalW) {
+            batchSpawnTimerW->start(batchIntervalW);
+        }
+    } else {
+        // 最后一批，停止定时器
+        if (batchSpawnTimerW->isActive()) {
+            batchSpawnTimerW->stop();
+        }
+        qDebug() << "Note bullet attack finished after last batch.";
+    }
+    gameView->viewport()->update();
+}
+
+void BattleWidget::crossLaserBullet(){
+
+    setEnemySprite("./ktresources/images/kano/k02.png");
+
+    qreal speed = 0;
+    qreal startX =346;
+    qreal startY =228;
+
+    QPointF startPos1(startX-125, startY-240);
+    QPointF startPos11(startX-130, startY-85);
+    QPointF startPos2(startX+255, startY-130);
+    QPointF startPos22(startX+95, startY-140);
+
+    WarningItem *warningItem1 = new WarningItem(45,"./ktresources/images/bullet/bambi1.png");
+    WarningItem *warningItem2 = new WarningItem(135,"./ktresources/images/bullet/bambi2.png");
+
+    warningItem1->setPos(startPos1);
+    warningItem2->setPos(startPos2);
+    warningItem1->setZValue(-1);
+    warningItem2->setZValue(-1);
+    gameScene->addItem(warningItem1);
+    gameScene->addItem(warningItem2);
+
+    QPointer<WarningItem> warningPtr1 = warningItem1;
+    QPointer<WarningItem> warningPtr2 = warningItem2;
+
+    // Warning闪烁动画
+    int flashInterval = 100; // 闪烁间隔
+    int flashCount = 20;      // 闪烁次数
+    int warningTotal = flashInterval * flashCount; // 总的 Warning 显示时间
+
+    for (int i = 0; i < flashCount; ++i) {
+        int delay = flashInterval * i;
+        QTimer::singleShot(delay, this, [warningPtr1,warningPtr2, i]() {
+            if(i%2==0){
+                warningPtr1->setPixmap("./ktresources/images/bullet/empty.png");
+                warningPtr2->setPixmap("./ktresources/images/bullet/empty.png");
+            }else{
+                warningPtr1->setPixmap("./ktresources/images/bullet/bambi1.png");
+                warningPtr2->setPixmap("./ktresources/images/bullet/bambi2.png");
+            }
+        });
+    }
+
+    // 生成攻击弹幕
+    QTimer::singleShot(warningTotal + 50, this, [this, warningPtr1, warningPtr2, startPos11, startPos22, speed]() {
+
+        int damage = 3;
+        QString pixmapPath = "./ktresources/images/bullet/laser.png";
+        FixedBulletItem *bullet1 = new FixedBulletItem(damage, 315, pixmapPath);
+        FixedBulletItem *bullet2 = new FixedBulletItem(damage, 45, pixmapPath);
+        bullet1->setPos(startPos11);
+        bullet2->setPos(startPos22);
+        bullet1->setZValue(100);
+        bullet2->setZValue(100);
+        QPointer<FixedBulletItem> bulletPtr1 = bullet1;
+        QPointer<FixedBulletItem> bulletPtr2 = bullet2;
+        gameScene->addItem(bullet1);
+        gameScene->addItem(bullet2);
+
+        QTimer::singleShot(2000, this, [bulletPtr1, bulletPtr2, warningPtr1, warningPtr2, this]() { // 3000ms自动删除
+            bulletPtr1->scene()->removeItem(bulletPtr1);
+            bulletPtr2->scene()->removeItem(bulletPtr2);
+            delete bulletPtr1;
+            delete bulletPtr2;
+            // 移除 Warning
+            warningPtr1->scene()->removeItem(warningPtr1);
+            warningPtr2->scene()->removeItem(warningPtr2);
+            delete warningPtr1;
+            delete warningPtr2;
+            setEnemySprite("./ktresources/images/kano/k01.png");
+        });
+    });
+    gameView->viewport()->update();
+}
 
 void BattleWidget::setupUi()
 {
@@ -847,17 +1148,6 @@ void BattleWidget::setupUi()
     mercyButton1->setFocusPolicy(Qt::StrongFocus);
     escapeButton->setFocusPolicy(Qt::StrongFocus);
 
-    battlePage = new QWidget(actionStackedWidget);  // 不再使用
-    // 清空 battlePage 的布局
-    //QLayout *oldLayout = battlePage->layout();
-    //if (oldLayout) {
-    //    QLayoutItem *item;
-    //    while ((item = oldLayout->takeAt(0)) != nullptr) {
-    //        delete item->widget(); // 删除控件
-    //        delete item;          // 删除布局项
-    //    }
-    //    delete oldLayout;         // 删除旧布局
-    //}
 
     // 创建 gameView，设置父窗口为 BattleWidget
     gameView = new QGraphicsView(this); // BattleWidget 作为父窗口
@@ -873,11 +1163,8 @@ void BattleWidget::setupUi()
     setupGameScene();
 
 
-
+    battlePage = new QWidget(actionStackedWidget);  // 不再使用
     attackPage = new QWidget(actionStackedWidget);
-    QLabel* attackPlaceholder = new QLabel("攻击将在这里进行", attackPage);
-    QVBoxLayout* attacklayout = new QVBoxLayout(attackPage);
-    attacklayout->addWidget(attackPlaceholder, 0, Qt::AlignCenter);
 
     dialoguePage = new QWidget(actionStackedWidget);
     QVBoxLayout *dialogueLayout = new QVBoxLayout(dialoguePage); // 页面内部布局
@@ -986,7 +1273,7 @@ void BattleWidget::setupUi()
     QHBoxLayout *bottomLayout=new QHBoxLayout();
     settingsButton =new QPushButton("设置",battleBoxFrame);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta 0.2.1",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale beta 0.3",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -1127,6 +1414,13 @@ void BattleWidget::setupStyles()
         "}"
         ).arg(pixelFont.family()).arg(pixelFont.pointSize());
 
+    attackPage->setStyleSheet(
+        "    background-image: url(./ktresources/images/attack/bg.png);"
+        "    background-repeat: no-repeat;"   // 不重复平铺
+        "    background-position: center;"    // 中心对齐
+        "    background-origin: content;"     // 绘制原点
+        "}"
+        );
 
     fightButton->setStyleSheet(buttonStyle);
     actButton->setStyleSheet(buttonStyle);
@@ -1154,11 +1448,10 @@ void BattleWidget::setupStyles()
 void BattleWidget::onFightClicked()
 {
     startDialogue("* 你选择了 战斗。");
-    //actionStackedWidget->setCurrentWidget(attackPage);
-    actionStackedWidget->setCurrentWidget(battlePage);
+    actionStackedWidget->setCurrentWidget(attackPage);
+    //actionStackedWidget->setCurrentWidget(battlePage);
     actionStackedWidget->show(); // 确保 StackedWidget 可见
-    modifyEnemyHp(-3);
-
+    //modifyEnemyHp(-3);
     if (gameView) {
         positionGameView(); // 定位
         gameView->show();   // 显示
@@ -1169,17 +1462,21 @@ void BattleWidget::onFightClicked()
         });
         startGameLoop();
         //spawnHomingAttack();
-        fistBullet(260,140,0);
+        //fistBullet(260,140,0);
+        //crossLaserBullet();
+        //noteBullet();
+        startAttack();
+        //noteWaveAttack();
         //circleBullet(); // 第一次立即调用
         int baseDelay = 2000; // 基础延迟 (ms)
         int interval = 1500;  // 每次调用之间的间隔 (ms)
-        QTimer::singleShot(baseDelay + interval * 0, this, [this](){ fistBullet(350,190,30);});
+        //QTimer::singleShot(baseDelay + interval * 0, this, [this](){ fistBullet(350,190,30);});
         //QTimer::singleShot(baseDelay + interval * 0, this, [this](){ spawnBullet(); });
         //QTimer::singleShot(baseDelay + interval * 1, this, [this](){ spawnBullet();spawnBullet();});
         //QTimer::singleShot(baseDelay + interval * 2, this, [this](){ spawnBullet(); spawnBullet();});
-        //QTimer::singleShot(baseDelay + interval * 0, this, [this](){  circleBullet();});
-        //QTimer::singleShot(baseDelay + interval * 1, this, [this](){  circleBullet(); circleBullet();});
-        //QTimer::singleShot(baseDelay + interval * 2, this, [this](){  circleBullet(); spawnBullet();});
+        //QTimer::singleShot(baseDelay + interval * 0, this, [this](){ circleBullet();});
+        //QTimer::singleShot(baseDelay + interval * 1, this, [this](){ circleBullet(); circleBullet();});
+        //QTimer::singleShot(baseDelay + interval * 2, this, [this](){ circleBullet(); spawnBullet();});
     }
 }
 

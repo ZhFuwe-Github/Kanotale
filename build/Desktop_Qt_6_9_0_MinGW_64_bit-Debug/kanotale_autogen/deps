@@ -1,5 +1,7 @@
 kanotale_autogen/timestamp: \
 	D:/QTprojects/kanotale/CMakeLists.txt \
+	D:/QTprojects/kanotale/attackstick.cpp \
+	D:/QTprojects/kanotale/attackstick.h \
 	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/.qtc/package-manager/auto-setup.cmake \
 	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/CMakeFiles/3.30.5/CMakeCXXCompiler.cmake \
 	D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/CMakeFiles/3.30.5/CMakeRCCompiler.cmake \
@@ -22,6 +24,7 @@ kanotale_autogen/timestamp: \
 	D:/QTprojects/kanotale/warningitem.h \
 	D:/QTprojects/kanotale/widget.cpp \
 	D:/QTprojects/kanotale/widget.h \
+	D:/Qt/6.9.0/mingw_64/include/QtCore/QElapsedTimer \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QEvent \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QList \
 	D:/Qt/6.9.0/mingw_64/include/QtCore/QObject \

@@ -5,7 +5,6 @@ LinearBulletItem::LinearBulletItem(int damage, qreal initialSpeed, qreal initial
 {
     this->speed = initialSpeed;
     this->angle = initialAngle;
-    this->removable = removable;
 
     setRotation(initialAngle);
     qDebug() << "linearbulletitem ANGLE :"<< initialAngle;

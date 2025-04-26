@@ -44,6 +44,7 @@ void PlayerHeartItem::setPixmap(const QString &pixmapPath)
     update();
 }
 
+
 QRectF PlayerHeartItem::boundingRect() const
 {
     return QRectF(0, 0, pixmap.width(), pixmap.height());

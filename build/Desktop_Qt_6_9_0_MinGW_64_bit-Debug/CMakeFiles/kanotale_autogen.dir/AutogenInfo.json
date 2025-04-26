@@ -362,6 +362,12 @@
 	"HEADERS" : 
 	[
 		[
+			"D:/QTprojects/kanotale/attackstick.h",
+			"MU",
+			"EWIEGA46WW/moc_attackstick.cpp",
+			null
+		],
+		[
 			"D:/QTprojects/kanotale/bulletitem.h",
 			"MU",
 			"EWIEGA46WW/moc_bulletitem.cpp",
@@ -481,6 +487,7 @@
 	"SETTINGS_FILE" : "D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/CMakeFiles/kanotale_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[ "D:/QTprojects/kanotale/attackstick.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/bulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/fixedbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/homingbulletitem.cpp", "MU", null ],

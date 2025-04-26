@@ -36,6 +36,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         warningitem.cpp
         fixedbulletitem.h
         fixedbulletitem.cpp
+        attackstick.h
+        attackstick.cpp
 
 
 

@@ -50,7 +50,11 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         "onSettingsClicked",
         "applySettings",
         "soundEnabled",
-        "hpFixEnabled"
+        "hpFixEnabled",
+        "handleBatchSpawn",
+        "handleBatchSpawnW",
+        "onAttackStickStopped",
+        "elapsedTime"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -71,6 +75,14 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         // Slot 'applySettings'
         QtMocHelpers::SlotData<void(bool, bool)>(9, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::Bool, 10 }, { QMetaType::Bool, 11 },
+        }}),
+        // Slot 'handleBatchSpawn'
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'handleBatchSpawnW'
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onAttackStickStopped'
+        QtMocHelpers::SlotData<void(qint64)>(14, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 15 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -103,6 +115,9 @@ void BattleWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 5: _t->updateEDialogueText(); break;
         case 6: _t->onSettingsClicked(); break;
         case 7: _t->applySettings((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 8: _t->handleBatchSpawn(); break;
+        case 9: _t->handleBatchSpawnW(); break;
+        case 10: _t->onAttackStickStopped((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
         default: ;
         }
     }
@@ -127,14 +142,14 @@ int BattleWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 8;
+        _id -= 11;
     }
     return _id;
 }
