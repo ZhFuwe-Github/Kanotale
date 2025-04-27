@@ -48,12 +48,4 @@ void HomingBulletItem::advance(int phase)
     qreal dx = speed * qCos(rad);
     qreal dy = speed * qSin(rad);
     setPos(pos() + QPointF(dx, dy));
-
-    // --- 越界检查 (调用基类或自己的逻辑) ---
-    //if (checkOutOfBounds()) {
-    //    if (scene()) {
-    //        scene()->removeItem(this);
-    //        delete this;
-    //    }
-    //}
 }

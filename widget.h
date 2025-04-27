@@ -17,6 +17,8 @@
 #include <QGraphicsView>
 #include <QMoveEvent>
 #include <QCloseEvent>
+#include <QSoundEffect> // 用于音效
+#include <QMediaPlayer> // 用于音乐/长音频
 
 class PlayerHeartItem; // 前向声明
 class BulletItem;
@@ -84,6 +86,7 @@ private:
     void updateGame();     // 处理游戏逻辑（碰撞等）
 
     void startAttack();
+    void startBattlePrepare();
     //QPointer<AttackStick> currentAttackStick = nullptr;
     AttackStick *currentAttackStickPtr = nullptr;
     qint64 lastAttackDuration = 0;
@@ -100,6 +103,8 @@ private:
         int batchInterval = 700;     // 每批之间的间隔 (ms)
     void fistBullet(int x,int y,int angle);
     void crossLaserBullet();
+    void paddleLaserBullet();
+    void vpaddleLaserBullet();
     void noteWaveAttack();
         //  波浪音符弹幕计时
         QTimer *batchSpawnTimerW = nullptr; // 用于分批生成的定时器
@@ -107,6 +112,8 @@ private:
         int totalBatchesW = 100;         // 总共要生成的批次数
         //int bulletsPerBatchW = ;     // 每批弹幕数量
         int batchIntervalW = 50;     // 每批之间的间隔 (ms)
+
+    void startRound();
 
     void positionGameView(); // 定位 gameView
 
@@ -131,8 +138,11 @@ private:
 
     QStackedWidget *actionStackedWidget; // 放置行动、仁慈、物品菜单、攻击框、战斗框、对话窗口
     QWidget *actMenuPage;
+    QPushButton *checkButton = nullptr;//每个页面需要自动获得焦点的button
     QWidget *itemMenuPage;
+    QPushButton* itemButton1 = nullptr;
     QWidget *mercyMenuPage;
+    QPushButton* mercyButton1 = nullptr;
     QWidget *battlePage; // 战斗弹幕页面
     QWidget *dialoguePage;
     QWidget *attackPage;
@@ -168,6 +178,9 @@ private:
     int enemyMaxHp;
     int enemyCurrentHp;
 
+    //控制游戏进度
+    int round = 0;
+
     const int FULL_SCENE_WIDTH = 720;
     const int FULL_SCENE_HEIGHT = 480;
 
@@ -192,6 +205,18 @@ private:
     QFont pixelFont;
     QFont smallpixelFont;
 
+    //音效
+    QSoundEffect *warningSound;
+    QSoundEffect *laserSound;
+    QSoundEffect *selectSound;
+    QSoundEffect *healSound;
+    QSoundEffect *hurtSound;
+    QSoundEffect *getitemSound;
+    QSoundEffect *gameoverSound;
+    QSoundEffect *edialogueSound;
+    QSoundEffect *attackSound;
+    QSoundEffect *beatSound;
+    QSoundEffect *fistSound;
 };
 
 #endif // WIDGET_H

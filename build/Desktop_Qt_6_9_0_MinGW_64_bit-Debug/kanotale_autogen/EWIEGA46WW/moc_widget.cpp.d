@@ -192,6 +192,15 @@ D:/QTprojects/kanotale/build/Desktop_Qt_6_9_0_MinGW_64_bit-Debug/kanotale_autoge
   D:/Qt/6.9.0/mingw_64/include/QtGui/qvectornd.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs.h \
   D:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs_win.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/QMediaPlayer \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/QSoundEffect \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qaudio.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qmediaplayer.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qsoundeffect.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtaudio.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
+  D:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QGraphicsScene \
   D:/Qt/6.9.0/mingw_64/include/QtWidgets/QGraphicsView \
