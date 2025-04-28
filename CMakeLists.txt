@@ -41,6 +41,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         attackstick.cpp
 
 
+        dogbulletitem.h
+        dogbulletitem.cpp
+
+
 
 
 

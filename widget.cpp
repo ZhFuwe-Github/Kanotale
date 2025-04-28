@@ -7,6 +7,7 @@
 #include "fixedbulletitem.h"
 #include "warningitem.h"
 #include "attackstick.h"
+#include "dogbulletitem.h"
 
 #include "qrandom.h"
 
@@ -22,6 +23,10 @@
 #include <QApplication>
 #include <QSoundEffect> // 用于音效
 #include <QMediaPlayer> // 用于音乐/长音频
+#include <QAudioOutput>
+#include <QUrl>          // 指定音乐文件路径
+#include <QDebug>
+#include <QDir>
 #include <qapplication.h>
 
 // --- 设定 ---
@@ -51,6 +56,8 @@ BattleWidget::BattleWidget(QWidget *parent)
     loadSmallCustomFont();
     setupUi();
     setupStyles();
+    // --- 设置背景音乐 ---
+    setupBackgroundMusic();
 
     // --- 初始化打字机效果定时器 ---
     dialogueTimer = new QTimer(this);
@@ -96,7 +103,7 @@ BattleWidget::BattleWidget(QWidget *parent)
     hurtSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/hurt.wav"));
     hurtSound->setVolume(1.0);
     healSound = new QSoundEffect(this);
-    healSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/healr.wav"));
+    healSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/heal.wav"));
     healSound->setVolume(1.0);
     getitemSound = new QSoundEffect(this);
     getitemSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/item.wav"));
@@ -169,6 +176,38 @@ void BattleWidget::loadSmallCustomFont()
         smallpixelFont.setStyleHint(QFont::TypeWriter);
     }
 }
+
+void BattleWidget::setupBackgroundMusic()
+{
+    backgroundMusicPlayer = new QMediaPlayer(this); // 创建播放器
+
+    // Qt6需要指定音频输出
+    audioOutput = new QAudioOutput(this);
+    backgroundMusicPlayer->setAudioOutput(audioOutput);
+
+    // 设置音乐文件
+    QString musicPath = "./ktresources/BGM.wav";
+    qDebug() << "Attempting to load background music from:" << QDir::currentPath() + "/" + musicPath;
+    backgroundMusicPlayer->setSource(QUrl::fromLocalFile(musicPath));
+
+    // 循环播放
+    backgroundMusicPlayer->setLoops(QMediaPlayer::Infinite);
+    audioOutput->setVolume(1.0); // 设置音量
+}
+
+// --- 控制播放 ---
+void BattleWidget::playBackgroundMusic() {
+    if (backgroundMusicPlayer && backgroundMusicPlayer->mediaStatus() != QMediaPlayer::NoMedia) {
+        if (backgroundMusicPlayer->playbackState() != QMediaPlayer::PlayingState) {
+            qDebug() << "Playing background music...";
+            backgroundMusicPlayer->play();
+        }
+    } else {
+        qWarning() << "Cannot play background music: Player not ready or no media loaded.";
+    }
+}
+        //backgroundMusicPlayer->stop();
+        //backgroundMusicPlayer->pause();
 
 
 // 设置按钮Enter键确认和自动聚焦
@@ -383,6 +422,7 @@ void BattleWidget::handlePlayerDeath()
     startDialogue("* G A M E   O V E R !");
     playerHeart->setPixmap("./ktresources/images/icon/dheart.png");
     gameoverSound->play();
+    //stopGameLoop();
 
     fightButton->setEnabled(false);
     actButton->setEnabled(false);
@@ -521,6 +561,9 @@ void BattleWidget::setupGameScene() {
 
     batchSpawnTimerW = new QTimer(this);
     connect(batchSpawnTimerW, &QTimer::timeout, this, &BattleWidget::handleBatchSpawnW);
+
+    batchSpawnTimerC = new QTimer(this);
+    connect(batchSpawnTimerC, &QTimer::timeout, this, &BattleWidget::handleBatchSpawnC);
 }
 
 // --- 控制游戏循环 ---
@@ -553,6 +596,9 @@ void BattleWidget::stopGameLoop() {
     }
     if (batchSpawnTimerW && batchSpawnTimerW->isActive()) {
         batchSpawnTimerW->stop();
+    }
+    if (batchSpawnTimerC && batchSpawnTimerC->isActive()) {
+        batchSpawnTimerC->stop();
     }
 
     // 恢复按钮状态
@@ -643,7 +689,7 @@ void BattleWidget::updateGame() {
     // 无敌帧动画
     if(invincible > 0){
         invincible-=1;
-        if(invincible%12>=6){playerHeart->setPixmap("./ktresources/images/icon/empty.png");}else{
+        if(invincible%12>=6){playerHeart->setPixmap("");}else{
             playerHeart->setPixmap("./ktresources/images/icon/heart.png");
         }
     }
@@ -751,7 +797,7 @@ void BattleWidget::spawnBullet() {
         QString pixmapPath = "./ktresources/images/bullet/dot.png";
 
         // 创建弹幕
-        LinearBulletItem *bullet = new LinearBulletItem(damage, speed, angle, pixmapPath);
+        LinearBulletItem *bullet = new LinearBulletItem(true,damage, speed, angle, pixmapPath);
 
         // 设置弹幕初始状态
         bullet->setPos(startPos);
@@ -779,8 +825,8 @@ void BattleWidget::circleBullet() {
 
         // 计算生成位置
         qreal pi=3.1415926;
-        qreal startX =centerX+200*qCos(i*pi*36/180);
-        qreal startY =centerY+200*qSin(i*pi*36/180);
+        qreal startX =centerX+350*qCos(i*pi*36/180);
+        qreal startY =centerY+350*qSin(i*pi*36/180);
 
         QPointF startPos(startX, startY);
         qDebug() << "Calculated startPos for bullet" << i << ":" << startPos;
@@ -793,7 +839,7 @@ void BattleWidget::circleBullet() {
         QString pixmapPath = "./ktresources/images/bullet/dot.png";
 
         // 创建弹幕
-        LinearBulletItem *bullet = new LinearBulletItem(damage, speed, angle, pixmapPath);
+        LinearBulletItem *bullet = new LinearBulletItem(true,damage, speed, angle, pixmapPath);
 
         // 设置弹幕初始状态
         bullet->setPos(startPos);
@@ -809,8 +855,8 @@ void BattleWidget::circleBullet() {
 void BattleWidget::spawnHomingAttack() {
 
     // 设置弹幕属性
-    int damage = 1;
-    qreal speed = 1.5;
+    int damage = 2;
+    qreal speed = 0.8;
     QString pixmapPath = "./ktresources/images/bullet/scissor.png";
 
     for(int i=1;i>=0;i--){
@@ -820,10 +866,10 @@ void BattleWidget::spawnHomingAttack() {
         qreal startY = 0;
         QRectF sceneRect = gameScene->sceneRect();
         if(i==0){
-            startX = sceneRect.left() - 10;
+            startX = sceneRect.left() +50;
             startY = QRandomGenerator::global()->bounded(sceneRect.height());
         }else{
-            startX = sceneRect.right() + 10;
+            startX = sceneRect.right() -50;
             startY = QRandomGenerator::global()->bounded(sceneRect.height());
         }
         QPointF startPos(startX, startY);
@@ -858,7 +904,7 @@ void BattleWidget::fistBullet(int x,int y,int fistAngle){
     QPointer<WarningItem> warningPtr = warningItem;
 
     // Warning闪烁动画
-    QString emptyPath = "./ktresources/images/bullet/empty.png";
+    QString emptyPath = "";
     int flashInterval = 100; // 闪烁间隔
     int flashCount = 10;      // 闪烁次数
     int warningTotal = flashInterval * flashCount; // 总的 Warning 显示时间
@@ -934,7 +980,7 @@ void BattleWidget::handleBatchSpawn() {
         QString pixmapPath = "./ktresources/images/bullet/8note.png";
 
         // 创建、添加弹幕
-        LinearBulletItem *bullet = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
+        LinearBulletItem *bullet = new LinearBulletItem(true,damage, speed, movementAngle, pixmapPath);
         if (!bullet) continue;
         bullet->setPos(startPos);
         bullet->setZValue(100);
@@ -994,8 +1040,8 @@ void BattleWidget::handleBatchSpawnW() {
     QString pixmapPath = "./ktresources/images/bullet/note.png";
 
     // 创建、添加弹幕
-    LinearBulletItem *bullet = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
-    LinearBulletItem *bullet1 = new LinearBulletItem(damage, speed, movementAngle, pixmapPath);
+    LinearBulletItem *bullet = new LinearBulletItem(true,damage, speed, movementAngle, pixmapPath);
+    LinearBulletItem *bullet1 = new LinearBulletItem(true,damage, speed, movementAngle, pixmapPath);
     bullet->setPos(startPos);
     bullet1->setPos(startPos1);
     bullet->setZValue(100);
@@ -1013,6 +1059,102 @@ void BattleWidget::handleBatchSpawnW() {
         // 最后一批，停止定时器
         if (batchSpawnTimerW->isActive()) {
             batchSpawnTimerW->stop();
+        }
+    }
+    gameView->viewport()->update();
+}
+
+//十字音符弹幕
+void BattleWidget::noteCrossAttack() {
+    if (batchSpawnTimerC->isActive()) {
+        return;
+    }
+    //setEnemyEffect("./ktresources/images/effect/guitar.png");
+    currentBatchC = 0; // 重置批次计数器
+
+    QString warningPath = "./ktresources/images/bullet/crosswarning.png";
+    WarningItem *warningItem = new WarningItem(0,warningPath);
+
+    warningItem->setPos(260,163);
+    warningItem->setZValue(-1);
+    gameScene->addItem(warningItem);
+    warningSound->play();
+
+    QPointer<WarningItem> warningPtr = warningItem;
+
+    // Warning闪烁动画
+    QString emptyPath = "";
+    int flashInterval = 100; // 闪烁间隔
+    int flashCount = 10;      // 闪烁次数
+    int warningTotal = flashInterval * flashCount; // 总的 Warning 显示时间
+    for (int i = 0; i < flashCount; ++i) {
+        int delay = flashInterval * i;
+        QString pathToShow = (i % 2 == 0) ? warningPath : emptyPath; // 交替显示 warning 和 empty
+        QTimer::singleShot(delay, this, [warningPtr, pathToShow]() {
+            warningPtr->setPixmap(pathToShow);
+        });
+    }
+
+    QTimer::singleShot(1000 , this, [this,warningPtr](){
+        warningPtr->scene()->removeItem(warningPtr);
+        delete warningPtr;
+        handleBatchSpawnC();
+    });
+
+}
+// 定时器触发的槽函数，生成每一批弹幕
+void BattleWidget::handleBatchSpawnC() {
+    if (currentBatchC >= totalBatchesC) { // 检查是否所有批次都已生成
+        if (batchSpawnTimerC->isActive()) {
+            batchSpawnTimerC->stop(); // 停止定时器
+        }
+        return;
+    }
+
+
+    qreal centerX = 346;
+    qreal centerY = 252;
+    qreal batchAngleOffset = currentBatchC * 13.0; // 计算当前批次的起始角度偏移
+
+    for (int j = 0; j < 4; ++j) {
+
+        // 计算位置
+        //qreal angleDegrees = j * 90 ;
+        //qreal angleRadians = qDegreesToRadians(angleDegrees);
+        qreal startX = centerX;
+        qreal startY = centerY;
+        QPointF startPos(startX, startY);
+
+        // 移动角度
+        qreal movementAngle = 180.0 + j * 90.0 + batchAngleOffset;
+        qreal speed = 10;
+        int damage = 2;
+        QString pixmapPath = "./ktresources/images/bullet/note1.png";
+
+        // 创建、添加弹幕
+        LinearBulletItem *bullet = new LinearBulletItem(false, damage, speed, movementAngle, pixmapPath);
+        if (!bullet) continue;
+        bullet->setPos(startPos);
+        bullet->setZValue(100);
+        if (gameScene) {
+            gameScene->addItem(bullet);
+        } else {
+            qWarning() << "gameScene is null!";
+            delete bullet;
+            continue;
+        }
+    }
+
+    currentBatchC++; // 批次计数增加
+    // 启动/保持定时器以生成下一批
+    if (currentBatchC < totalBatchesC) {
+        if (!batchSpawnTimerC->isActive() || batchSpawnTimerC->interval() != batchIntervalC) {
+            batchSpawnTimerC->start(batchIntervalC);
+        }
+    } else {
+        // 最后一批，停止定时器
+        if (batchSpawnTimerC->isActive()) {
+            batchSpawnTimerC->stop();
         }
     }
     gameView->viewport()->update();
@@ -1055,8 +1197,8 @@ void BattleWidget::crossLaserBullet(){
         int delay = flashInterval * i;
         QTimer::singleShot(delay, this, [warningPtr1,warningPtr2, i]() {
             if(i%2==0){
-                warningPtr1->setPixmap("./ktresources/images/bullet/empty.png");
-                warningPtr2->setPixmap("./ktresources/images/bullet/empty.png");
+                warningPtr1->setPixmap("");
+                warningPtr2->setPixmap("");
             }else{
                 warningPtr1->setPixmap("./ktresources/images/bullet/bambi1.png");
                 warningPtr2->setPixmap("./ktresources/images/bullet/bambi2.png");
@@ -1135,8 +1277,8 @@ void BattleWidget::paddleLaserBullet(){
         int delay = flashInterval * i;
         QTimer::singleShot(delay, this, [warningPtr1,warningPtr2, i]() {
             if(i%2==0){
-                warningPtr1->setPixmap("./ktresources/images/bullet/empty.png");
-                warningPtr2->setPixmap("./ktresources/images/bullet/empty.png");
+                warningPtr1->setPixmap("");
+                warningPtr2->setPixmap("");
             }else{
                 warningPtr1->setPixmap("./ktresources/images/bullet/bambi1.png");
                 warningPtr2->setPixmap("./ktresources/images/bullet/bambi2.png");
@@ -1215,8 +1357,8 @@ void BattleWidget::vpaddleLaserBullet(){
         int delay = flashInterval * i;
         QTimer::singleShot(delay, this, [warningPtr1,warningPtr2, i]() {
             if(i%2==0){
-                warningPtr1->setPixmap("./ktresources/images/bullet/empty.png");
-                warningPtr2->setPixmap("./ktresources/images/bullet/empty.png");
+                warningPtr1->setPixmap("");
+                warningPtr2->setPixmap("");
             }else{
                 warningPtr1->setPixmap("./ktresources/images/bullet/bambi1.png");
                 warningPtr2->setPixmap("./ktresources/images/bullet/bambi2.png");
@@ -1257,6 +1399,182 @@ void BattleWidget::vpaddleLaserBullet(){
     });
     gameView->viewport()->update();
 }
+
+void BattleWidget::crossArrowAttack(){
+    // 设置弹幕属性
+    int damage = 1;
+    qreal speed = 1.8;
+    QString pixmapPath = "./ktresources/images/bullet/star1.png";
+    QPointF currentHeartPos = playerHeart->pos();
+    qreal startX = 0;
+    qreal startY = 0;
+    qreal movementAngle = 0;
+    for(int i=3;i>=0;i--){
+        // 确定生成位置
+        switch (i) {
+        case 0:
+            startX = 140;
+            startY = 0;
+            movementAngle = 180;
+            break;
+        case 1:
+            startX = -140;
+            startY = 0;
+            movementAngle = 0;
+            break;
+        case 2:
+            startX = 0;
+            startY = 140;
+            movementAngle = 270;
+            break;
+        case 3:
+            startX = 0;
+            startY = -140;
+            movementAngle = 90;
+            break;
+        }
+        QPointF startPos(startX, startY);
+
+        LinearBulletItem *bullet = new LinearBulletItem(false, damage, speed, movementAngle, pixmapPath);
+
+        bullet->setPos(startPos+currentHeartPos);
+        bullet->setZValue(100);
+        gameScene->addItem(bullet);
+    }
+    gameView->viewport()->update();
+};
+
+void BattleWidget::dogAttack(int position,bool right){
+
+    int damage = 1;
+    qreal speed = 2.5;
+    qreal startX = 0;
+    qreal startY = 0;
+    QString pixmapPath1;
+    QString pixmapPath2;
+    qreal movementAngle = 0;
+
+    switch (position) {
+    case 1:
+        startY = 100;
+        break;
+    case 2:
+        startY = 200;
+        break;
+    case 3:
+        startY = 300;
+        break;
+    }
+
+    if(right){
+        startX = 700;
+        pixmapPath1 = "./ktresources/images/bullet/dog1.png";
+        pixmapPath2 = "./ktresources/images/bullet/dog2.png";
+        movementAngle = 180;
+    }else{
+        startX = -120;
+        pixmapPath1 = "./ktresources/images/bullet/dog3.png";
+        pixmapPath2 = "./ktresources/images/bullet/dog4.png";
+        movementAngle = 0;
+    }
+
+    QPointF startPos(startX, startY);
+    //LinearBulletItem *bullet = new LinearBulletItem(false, damage, speed, movementAngle, pixmapPath1);
+    DogBulletItem *bullet = new DogBulletItem(damage, speed, movementAngle, pixmapPath1, pixmapPath2);
+    bullet->setPos(startPos);
+    bullet->setZValue(100);
+    gameScene->addItem(bullet);
+
+    gameView->viewport()->update();
+};
+
+void BattleWidget::glcefAttack(int position,bool right){
+
+    int damage = 1;
+    qreal speed = 4.5;
+    qreal startX = 0;
+    qreal startY = 0;
+    QString pixmapPath1;
+    QString pixmapPath2;
+    qreal movementAngle = 0;
+
+    switch (position) {
+    case 1:
+        startY = 100;
+        break;
+    case 2:
+        startY = 200;
+        break;
+    case 3:
+        startY = 300;
+        break;
+    }
+
+    if(right){
+        startX = 700;
+        pixmapPath1 = "./ktresources/images/bullet/gclef1.png";
+        pixmapPath2 = "./ktresources/images/bullet/gclef2.png";
+        movementAngle = 180;
+    }else{
+        startX = -120;
+        pixmapPath1 = "./ktresources/images/bullet/dog3.png";
+        pixmapPath2 = "./ktresources/images/bullet/dog4.png";
+        movementAngle = 0;
+    }
+
+    QPointF startPos(startX, startY);
+    //LinearBulletItem *bullet = new LinearBulletItem(false, damage, speed, movementAngle, pixmapPath1);
+    DogBulletItem *bullet = new DogBulletItem(damage, speed, movementAngle, pixmapPath1, pixmapPath2);
+    bullet->setPos(startPos);
+    bullet->setZValue(100);
+    gameScene->addItem(bullet);
+
+    gameView->viewport()->update();
+};
+
+void BattleWidget::xcrossArrowAttack(){
+    // 设置弹幕属性
+    int damage = 1;
+    qreal speed = 1.8;
+    QString pixmapPath = "./ktresources/images/bullet/star1.png";
+    QPointF currentHeartPos = playerHeart->pos();
+    qreal startX = 0;
+    qreal startY = 0;
+    qreal movementAngle = 0;
+    for(int i=3;i>=0;i--){
+        // 确定生成位置
+        switch (i) {
+        case 0:
+            startX = 100;
+            startY = 100;
+            movementAngle = 225;
+            break;
+        case 1:
+            startX = -100;
+            startY = -100;
+            movementAngle = 45;
+            break;
+        case 2:
+            startX = -100;
+            startY = 100;
+            movementAngle = 315;
+            break;
+        case 3:
+            startX = 100;
+            startY = -100;
+            movementAngle = 135;
+            break;
+        }
+        QPointF startPos(startX, startY);
+
+        LinearBulletItem *bullet = new LinearBulletItem(false, damage, speed, movementAngle, pixmapPath);
+
+        bullet->setPos(startPos+currentHeartPos);
+        bullet->setZValue(100);
+        gameScene->addItem(bullet);
+    }
+    gameView->viewport()->update();
+};
 
 void BattleWidget::setupUi()
 {
@@ -1500,7 +1818,7 @@ void BattleWidget::setupUi()
     actButton->setIconSize(QSize(32, 32));
     itemButton->setIconSize(QSize(32, 32));
     mercyButton->setIconSize(QSize(32, 32));
-    fightButton->setIcon(QIcon("./ktresources/images/icon/fight.png"));
+    fightButton->setIcon(           QIcon("./ktresources/images/icon/fight.png"));
     actButton->setIcon(QIcon("./ktresources/images/icon/act.png"));
     itemButton->setIcon(QIcon("./ktresources/images/icon/item.png"));
     mercyButton->setIcon(QIcon("./ktresources/images/icon/mercy.png"));
@@ -1509,7 +1827,7 @@ void BattleWidget::setupUi()
     settingsButton =new QPushButton("设置",battleBoxFrame);
     settingsButton->setFocusPolicy(Qt::NoFocus);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta 0.4",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale beta 0.5",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -1689,10 +2007,11 @@ void BattleWidget::startRound()
         actionStackedWidget->setCurrentWidget(battlePage);
 
         startBattlePrepare();
+
         QTimer::singleShot(1000 , this, [this](){ crossLaserBullet();});
         QTimer::singleShot(3000 , this, [this](){ paddleLaserBullet();});
-        QTimer::singleShot(5000 , this, [this](){ crossLaserBullet(); });
-        QTimer::singleShot(7000 , this, [this](){ vpaddleLaserBullet(); });
+        QTimer::singleShot(5000 , this, [this](){ crossLaserBullet();});
+        QTimer::singleShot(7000 , this, [this](){ vpaddleLaserBullet();});
 
         QTimer::singleShot(9000 , this, [this](){
             //显示敌人
@@ -1710,6 +2029,7 @@ void BattleWidget::startRound()
         QTimer::singleShot(9700 , this, [this](){
             setEnemySprite(ENEMY_SPRITE_PATH);
             startEDialogue("* 开始吧。");
+            playBackgroundMusic();
         });
         round+=1;
         break;
@@ -1717,11 +2037,12 @@ void BattleWidget::startRound()
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+
         spawnBullet();
-        QTimer::singleShot(2000 , this, [this](){ spawnBullet();spawnBullet();});
-        QTimer::singleShot(4000 , this, [this](){ spawnBullet();circleBullet();});
-        QTimer::singleShot(6000 , this, [this](){ circleBullet();circleBullet(); });
-        QTimer::singleShot(9000 , this, [this](){
+        QTimer::singleShot(3000 , this, [this](){ spawnBullet();spawnBullet();});
+        QTimer::singleShot(6000 , this, [this](){ spawnBullet();circleBullet();});
+        QTimer::singleShot(10000 , this, [this](){ circleBullet();circleBullet(); });
+        QTimer::singleShot(16000 , this, [this](){
 
             startDialogue("* 她就站在那里.");
             actionStackedWidget->setCurrentWidget(dialoguePage);
@@ -1734,10 +2055,162 @@ void BattleWidget::startRound()
         round+=1;
         break;
     case 2:
-        ;
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+
+        QTimer::singleShot(2000 , this, [this](){ dogAttack(1,false);dogAttack(2,true);dogAttack(3,false);});
+        QTimer::singleShot(7000 , this, [this](){ dogAttack(1,true);dogAttack(2,false);dogAttack(3,true);});
+        QTimer::singleShot(13000 , this, [this](){
+
+            startDialogue("* 她就站在那里.");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+
+            //停止弹幕攻击
+            stopGameLoop();
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
         break;
     case 3:
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+
+        //spawnBullet();
+        QTimer::singleShot(2000 , this, [this](){ spawnHomingAttack();});
+        //QTimer::singleShot(8000 , this, [this](){ paddleLaserBullet();});
+        QTimer::singleShot(6000 , this, [this](){ circleBullet(); });
+        QTimer::singleShot(12000 , this, [this](){
+
+            startDialogue("* 她就站在那里.");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+
+            //停止弹幕攻击
+            stopGameLoop();
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;
+    case 4:
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+
+        QTimer::singleShot(2000 , this, [this](){ crossArrowAttack();});
+        QTimer::singleShot(4000 , this, [this](){ xcrossArrowAttack();});
+        QTimer::singleShot(6000 , this, [this](){ crossArrowAttack(); });
+        QTimer::singleShot(8000 , this, [this](){ xcrossArrowAttack(); });
+        QTimer::singleShot(10000 , this, [this](){ crossArrowAttack(); });
+        QTimer::singleShot(13000 , this, [this](){
+
+            startDialogue("* 她就站在那里.");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+
+            //停止弹幕攻击
+            stopGameLoop();
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;
+    case 5:
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+
+        QTimer::singleShot(1000 , this, [this](){ dogAttack(1,false);dogAttack(3,true);});
+        QTimer::singleShot(4000 , this, [this](){ xcrossArrowAttack();dogAttack(2,true);});
+        QTimer::singleShot(7000 , this, [this](){ dogAttack(1,true);crossArrowAttack();dogAttack(2,false); });
+        QTimer::singleShot(10000 , this, [this](){ xcrossArrowAttack(); });
+        QTimer::singleShot(13500 , this, [this](){ dogAttack(3,false);crossArrowAttack(); });
+        QTimer::singleShot(17000 , this, [this](){
+
+            startDialogue("* 她就站在那里.");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+
+            //停止弹幕攻击
+            stopGameLoop();
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;
+    case 6:
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+
+        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();});
+        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");setEnemyEffect("");;noteWaveAttack();});
+        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot(20000 , this, [this](){
+
+            ENEMY_SPRITE_PATH = "./ktresources/images/kano/k05.png";
+            setEnemySprite(ENEMY_SPRITE_PATH);
+            startDialogue("* 鹿乃看上去有些疲惫.");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+
+            //停止弹幕攻击
+            stopGameLoop();
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;
+    case 7:
         ;
+        round+=1;
+        break;
+    case 8:
+        ;
+        round+=1;
+        break;
+    case 9:
+        ;
+        round+=1;
+        break;
+    case 10:
+        ;
+        round+=1;
+        break;
+    case 11:
+        ;
+        round+=1;
+        break;
+    case 12:
+        ;
+        round+=1;
+        break;
+    case 13:
+        ;
+        round+=1;
+        break;
+    case 14:
+        ;
+        round+=1;
+        break;
+    case 15:
+        ;
+        round+=1;
         break;
     default:
         ;

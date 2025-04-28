@@ -19,6 +19,9 @@
 #include <QCloseEvent>
 #include <QSoundEffect> // 用于音效
 #include <QMediaPlayer> // 用于音乐/长音频
+#include <QAudioOutput>
+#include <QUrl>          // 用于指定音乐文件路径
+#include <QDir>
 
 class PlayerHeartItem; // 前向声明
 class BulletItem;
@@ -66,6 +69,7 @@ private slots:
     void applySettings(bool soundEnabled, bool hpFixEnabled);
     void handleBatchSpawn();
     void handleBatchSpawnW();
+    void handleBatchSpawnC();
     void onAttackStickStopped(qint64 elapsedTime);    // 接收 AttackStick 停止信号
 
 private:
@@ -74,6 +78,10 @@ private:
     void loadCustomFont();
     void loadSmallCustomFont();
     void loadAndSetPixmap(QLabel* label, const QString& path, const QSize& targetSize);
+    QMediaPlayer *backgroundMusicPlayer = nullptr; // 背景音乐播放器
+    QAudioOutput *audioOutput = nullptr; // Qt 6 需要指定音频输出
+    void setupBackgroundMusic(); // 设置背景音乐
+    void playBackgroundMusic();
 
     void updateHpDisplay(); // 更新 HP 显示
     void handlePlayerDeath(); // 处理玩家死亡
@@ -112,6 +120,17 @@ private:
         int totalBatchesW = 100;         // 总共要生成的批次数
         //int bulletsPerBatchW = ;     // 每批弹幕数量
         int batchIntervalW = 50;     // 每批之间的间隔 (ms)
+    void noteCrossAttack();
+        //  波浪音符弹幕计时
+        QTimer *batchSpawnTimerC = nullptr; // 用于分批生成的定时器
+        int currentBatchC = 0;         // 当前是第几批
+        int totalBatchesC = 1000;         // 总共要生成的批次数
+        //int bulletsPerBatchW = ;     // 每批弹幕数量
+        int batchIntervalC = 70;     // 每批之间的间隔 (ms)
+    void xcrossArrowAttack();
+    void crossArrowAttack();
+    void dogAttack(int position,bool right);
+    void glcefAttack(int position,bool right);
 
     void startRound();
 

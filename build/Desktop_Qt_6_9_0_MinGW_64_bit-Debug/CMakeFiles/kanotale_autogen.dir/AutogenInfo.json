@@ -483,6 +483,12 @@
 			null
 		],
 		[
+			"D:/QTprojects/kanotale/dogbulletitem.h",
+			"MU",
+			"EWIEGA46WW/moc_dogbulletitem.cpp",
+			null
+		],
+		[
 			"D:/QTprojects/kanotale/fixedbulletitem.h",
 			"MU",
 			"EWIEGA46WW/moc_fixedbulletitem.cpp",
@@ -602,6 +608,7 @@
 	[
 		[ "D:/QTprojects/kanotale/attackstick.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/bulletitem.cpp", "MU", null ],
+		[ "D:/QTprojects/kanotale/dogbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/fixedbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/homingbulletitem.cpp", "MU", null ],
 		[ "D:/QTprojects/kanotale/linearbulletitem.cpp", "MU", null ],

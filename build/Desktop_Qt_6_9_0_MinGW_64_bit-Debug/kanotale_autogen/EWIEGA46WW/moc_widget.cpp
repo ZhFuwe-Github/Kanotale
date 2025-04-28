@@ -53,6 +53,7 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         "hpFixEnabled",
         "handleBatchSpawn",
         "handleBatchSpawnW",
+        "handleBatchSpawnC",
         "onAttackStickStopped",
         "elapsedTime"
     };
@@ -80,9 +81,11 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'handleBatchSpawnW'
         QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'handleBatchSpawnC'
+        QtMocHelpers::SlotData<void()>(14, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onAttackStickStopped'
-        QtMocHelpers::SlotData<void(qint64)>(14, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::LongLong, 15 },
+        QtMocHelpers::SlotData<void(qint64)>(15, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::LongLong, 16 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -117,7 +120,8 @@ void BattleWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 7: _t->applySettings((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
         case 8: _t->handleBatchSpawn(); break;
         case 9: _t->handleBatchSpawnW(); break;
-        case 10: _t->onAttackStickStopped((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 10: _t->handleBatchSpawnC(); break;
+        case 11: _t->onAttackStickStopped((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
         default: ;
         }
     }
@@ -142,14 +146,14 @@ int BattleWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 12;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 12)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 11;
+        _id -= 12;
     }
     return _id;
 }
