@@ -55,7 +55,17 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         "handleBatchSpawnW",
         "handleBatchSpawnC",
         "onAttackStickStopped",
-        "elapsedTime"
+        "elapsedTime",
+        "onActCheckClicked",
+        "onActTalkClicked",
+        "onActAskClicked",
+        "onActFondleClicked",
+        "onActThreatenClicked",
+        "onItemButton1Clicked",
+        "onItemButton2Clicked",
+        "onItemButton3Clicked",
+        "onMercySpareClicked",
+        "onMercyFleeClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -87,6 +97,26 @@ template <> constexpr inline auto BattleWidget::qt_create_metaobjectdata<qt_meta
         QtMocHelpers::SlotData<void(qint64)>(15, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::LongLong, 16 },
         }}),
+        // Slot 'onActCheckClicked'
+        QtMocHelpers::SlotData<void()>(17, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onActTalkClicked'
+        QtMocHelpers::SlotData<void()>(18, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onActAskClicked'
+        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onActFondleClicked'
+        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onActThreatenClicked'
+        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onItemButton1Clicked'
+        QtMocHelpers::SlotData<void()>(22, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onItemButton2Clicked'
+        QtMocHelpers::SlotData<void()>(23, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onItemButton3Clicked'
+        QtMocHelpers::SlotData<void()>(24, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onMercySpareClicked'
+        QtMocHelpers::SlotData<void()>(25, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onMercyFleeClicked'
+        QtMocHelpers::SlotData<void()>(26, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -122,6 +152,16 @@ void BattleWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 9: _t->handleBatchSpawnW(); break;
         case 10: _t->handleBatchSpawnC(); break;
         case 11: _t->onAttackStickStopped((*reinterpret_cast< std::add_pointer_t<qint64>>(_a[1]))); break;
+        case 12: _t->onActCheckClicked(); break;
+        case 13: _t->onActTalkClicked(); break;
+        case 14: _t->onActAskClicked(); break;
+        case 15: _t->onActFondleClicked(); break;
+        case 16: _t->onActThreatenClicked(); break;
+        case 17: _t->onItemButton1Clicked(); break;
+        case 18: _t->onItemButton2Clicked(); break;
+        case 19: _t->onItemButton3Clicked(); break;
+        case 20: _t->onMercySpareClicked(); break;
+        case 21: _t->onMercyFleeClicked(); break;
         default: ;
         }
     }
@@ -146,14 +186,14 @@ int BattleWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 22)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 22;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 22)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 12;
+        _id -= 22;
     }
     return _id;
 }

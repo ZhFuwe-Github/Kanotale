@@ -59,18 +59,39 @@ protected:
      void showEvent(QShowEvent *event) override;
 
 private slots:
+
     void onFightClicked();
     void onActClicked();
     void onItemClicked();
     void onMercyClicked();
+
     void updateDialogueText();
     void updateEDialogueText();
+
     void onSettingsClicked();
     void applySettings(bool soundEnabled, bool hpFixEnabled);
+
     void handleBatchSpawn();
     void handleBatchSpawnW();
     void handleBatchSpawnC();
+
     void onAttackStickStopped(qint64 elapsedTime);    // 接收 AttackStick 停止信号
+
+    // --- 行动菜单槽 ---
+    void onActCheckClicked();
+    void onActTalkClicked();
+    void onActAskClicked();
+    void onActFondleClicked();
+    void onActThreatenClicked();
+
+    // --- 物品菜单槽 ---
+    void onItemButton1Clicked();
+    void onItemButton2Clicked();
+    void onItemButton3Clicked();
+
+    // --- 仁慈菜单槽 ---
+    void onMercySpareClicked();
+    void onMercyFleeClicked();
 
 private:
     void setupUi();
@@ -124,7 +145,7 @@ private:
         //  波浪音符弹幕计时
         QTimer *batchSpawnTimerC = nullptr; // 用于分批生成的定时器
         int currentBatchC = 0;         // 当前是第几批
-        int totalBatchesC = 1000;         // 总共要生成的批次数
+        int totalBatchesC = 210;         // 总共要生成的批次数
         //int bulletsPerBatchW = ;     // 每批弹幕数量
         int batchIntervalC = 70;     // 每批之间的间隔 (ms)
     void xcrossArrowAttack();
@@ -157,14 +178,18 @@ private:
 
     QStackedWidget *actionStackedWidget; // 放置行动、仁慈、物品菜单、攻击框、战斗框、对话窗口
     QWidget *actMenuPage;
-    QPushButton *checkButton = nullptr;//每个页面需要自动获得焦点的button
+    QPushButton *checkButton;//每个页面需要自动获得焦点的button
     QWidget *itemMenuPage;
-    QPushButton* itemButton1 = nullptr;
     QWidget *mercyMenuPage;
-    QPushButton* mercyButton1 = nullptr;
+    QPushButton* mercyButton1;
     QWidget *battlePage; // 战斗弹幕页面
     QWidget *dialoguePage;
     QWidget *attackPage;
+
+    QLabel *infoLabel;
+    QPushButton *itemButton1;
+    QPushButton *itemButton2;
+    QPushButton *itemButton3;
 
     const QSize ENEMY_SPRITE_TARGET_SIZE = QSize(304,376);
 
@@ -196,9 +221,10 @@ private:
     //敌人状态
     int enemyMaxHp;
     int enemyCurrentHp;
+    bool forgivable = false;
 
     //控制游戏进度
-    int round = 0;
+    int round = 1;
 
     const int FULL_SCENE_WIDTH = 720;
     const int FULL_SCENE_HEIGHT = 480;
