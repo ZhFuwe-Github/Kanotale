@@ -31,9 +31,9 @@
 
 // --- 设定 ---
 const QString PLAYER_NAME = "小鹿包";
-const int PLAYER_LV = 16;
-const int INITIAL_PLAYER_MAX_HP = 54;
-const int INITIAL_PLAYER_CURRENT_HP = 54;
+const int PLAYER_LV = 13;
+const int INITIAL_PLAYER_MAX_HP = 46;
+const int INITIAL_PLAYER_CURRENT_HP = 46;
 QString ENEMY_SPRITE_PATH = "./ktresources/images/kano/k01.png";
 const QString FONT_PATH = "./ktresources/fonts/fusion-pixel-12px-monospaced-latin.ttf";
 const QString SMALL_FONT_PATH = "./ktresources/fonts/fusion-pixel-8px-monospaced-latin.ttf";
@@ -90,39 +90,97 @@ BattleWidget::BattleWidget(QWidget *parent)
     connect(mercyButton, &QPushButton::clicked, this, &BattleWidget::onMercyClicked);
 
     //加载音乐音效
-    warningSound = new QSoundEffect(this);
+    warningSound = new QSoundEffect(this);//
     warningSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/warning.wav"));
     warningSound->setVolume(1.0);
-    laserSound = new QSoundEffect(this);
+    laserSound = new QSoundEffect(this);//
     laserSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/laser.wav"));
     laserSound->setVolume(1.0);
     selectSound = new QSoundEffect(this);
     selectSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/select.wav"));
     selectSound->setVolume(1.0);
-    hurtSound = new QSoundEffect(this);
+    selectSoundTimer.start();
+    hurtSound = new QSoundEffect(this);//
     hurtSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/hurt.wav"));
     hurtSound->setVolume(1.0);
-    healSound = new QSoundEffect(this);
+    healSound = new QSoundEffect(this);//
     healSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/heal.wav"));
     healSound->setVolume(1.0);
-    getitemSound = new QSoundEffect(this);
+    getitemSound = new QSoundEffect(this);//
     getitemSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/item.wav"));
     getitemSound->setVolume(1.0);
-    gameoverSound = new QSoundEffect(this);
+    gameoverSound = new QSoundEffect(this);//
     gameoverSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/gameover.wav"));
     gameoverSound->setVolume(1.0);
-    edialogueSound = new QSoundEffect(this);
+    edialogueSound = new QSoundEffect(this);//
     edialogueSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/edialogue.wav"));
     edialogueSound->setVolume(1.0);
-    attackSound = new QSoundEffect(this);
+    attackSound = new QSoundEffect(this);//
     attackSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/attack.wav"));
     attackSound->setVolume(1.0);
-    beatSound = new QSoundEffect(this);
+    beatSound = new QSoundEffect(this);//
     beatSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/beat.wav"));
     beatSound->setVolume(1.0);
-    fistSound = new QSoundEffect(this);
+    fistSound = new QSoundEffect(this);//
     fistSound->setSource(QUrl::fromLocalFile("./ktresources/sounds/fist.wav"));
     fistSound->setVolume(1.0);
+    //加载鹿鸣
+    hurt1 = new QSoundEffect(this);
+    hurt1->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt1.wav"));
+    hurt1->setVolume(1.0);
+    hurt2 = new QSoundEffect(this);
+    hurt2->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt2.wav"));
+    hurt2->setVolume(1.0);
+    hurt3 = new QSoundEffect(this);
+    hurt3->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt3.wav"));
+    hurt3->setVolume(1.0);
+    hurt4 = new QSoundEffect(this);
+    hurt4->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt4.wav"));
+    hurt4->setVolume(1.0);
+    hurt5 = new QSoundEffect(this);
+    hurt5->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt5.wav"));
+    hurt5->setVolume(1.0);
+    hurt6 = new QSoundEffect(this);
+    hurt6->setSource(QUrl::fromLocalFile("./ktresources/vioces/hurt6.wav"));
+    hurt6->setVolume(1.0);
+    attack1 = new QSoundEffect(this);
+    attack1->setSource(QUrl::fromLocalFile("./ktresources/vioces/attack1.wav"));
+    attack1->setVolume(1.0);
+    attack2 = new QSoundEffect(this);
+    attack2->setSource(QUrl::fromLocalFile("./ktresources/vioces/attack2.wav"));
+    attack2->setVolume(1.0);
+    attack3 = new QSoundEffect(this);
+    attack3->setSource(QUrl::fromLocalFile("./ktresources/vioces/attack3.wav"));
+    attack3->setVolume(1.0);
+    attack4 = new QSoundEffect(this);
+    attack4->setSource(QUrl::fromLocalFile("./ktresources/vioces/attack4.wav"));
+    attack4->setVolume(1.0);
+    apexfistattack = new QSoundEffect(this);
+    apexfistattack->setSource(QUrl::fromLocalFile("./ktresources/vioces/apexfistattack.wav"));
+    apexfistattack->setVolume(1.0);
+    scissorattack = new QSoundEffect(this);
+    scissorattack->setSource(QUrl::fromLocalFile("./ktresources/vioces/scissorattack.wav"));
+    scissorattack->setVolume(1.0);
+    yummy = new QSoundEffect(this);
+    yummy->setSource(QUrl::fromLocalFile("./ktresources/vioces/yummy.wav"));
+    yummy->setVolume(1.0);
+    xlbyummy = new QSoundEffect(this);
+    xlbyummy->setSource(QUrl::fromLocalFile("./ktresources/vioces/xlbyummy.wav"));
+    xlbyummy->setVolume(1.0);
+    jvranlaiwenwo = new QSoundEffect(this);
+    jvranlaiwenwo->setSource(QUrl::fromLocalFile("./ktresources/vioces/jvranlaiwenwo.wav"));
+    jvranlaiwenwo->setVolume(1.0);
+    playerdead = new QSoundEffect(this);
+    playerdead->setSource(QUrl::fromLocalFile("./ktresources/vioces/playerdead.wav"));
+    playerdead->setVolume(1.0);
+    unforgivable = new QSoundEffect(this);
+    unforgivable->setSource(QUrl::fromLocalFile("./ktresources/vioces/unforgivable.wav"));
+    unforgivable->setVolume(1.0);
+    terr = new QSoundEffect(this);
+    terr->setSource(QUrl::fromLocalFile("./ktresources/vioces/terr.wav"));
+    terr->setVolume(1.0);
+
+
 
     //回合开始
     fightButton->setEnabled(false);
@@ -177,6 +235,54 @@ void BattleWidget::loadSmallCustomFont()
     }
 }
 
+void BattleWidget::playRandomHurtSound(){
+    QRandomGenerator *generator = QRandomGenerator::global();
+    int random = generator->bounded(6);
+    switch (random+1) {
+    case 1:
+        hurt1->play();
+        break;
+    case 2:
+        hurt2->play();
+        break;
+    case 3:
+        hurt3->play();
+        break;
+    case 4:
+        hurt4->play();
+        break;
+    case 5:
+        hurt5->play();
+        break;
+    case 6:
+        hurt6->play();
+        break;
+    default:
+        break;
+    }
+};
+
+void BattleWidget::playRandomAttackSound(){
+    QRandomGenerator *generator = QRandomGenerator::global();
+    int random = generator->bounded(4);
+    switch (random+1) {
+    case 1:
+        attack1->play();
+        break;
+    case 2:
+        attack2->play();
+        break;
+    case 3:
+        attack3->play();
+        break;
+    case 4:
+        attack4->play();
+        break;
+    default:
+        break;
+    }
+};
+
 void BattleWidget::setupBackgroundMusic()
 {
     backgroundMusicPlayer = new QMediaPlayer(this); // 创建播放器
@@ -210,9 +316,45 @@ void BattleWidget::playBackgroundMusic() {
         //backgroundMusicPlayer->pause();
 
 
-// 设置按钮Enter键确认和自动聚焦
+// 设置按钮Enter键确认、自动聚焦、物品说明自动更新、选择音效
 bool BattleWidget::eventFilter(QObject *watched, QEvent *event)
 {
+    if(!battling&&!attacking){
+    // 选择音效、物品说明自动更新
+    if (event->type() == QEvent::FocusIn) {
+        if (watched == fightButton || watched == actButton || watched == itemButton || watched == mercyButton ||
+            watched == checkButton || watched == talkButton || watched == askButton || watched == fondleButton || watched == threatenButton ||
+            watched == itemButton1 || watched == itemButton2 || watched == itemButton3 ||
+            watched == spareButton || watched == escapeButton)
+        {
+            //避免按键音重复播放
+            qint64 currentTime = selectSoundTimer.elapsed();
+            if (lastSelectSoundTime < 0 || currentTime - lastSelectSoundTime > SELECT_SOUND_DEBOUNCE) {
+                // 如果是第一次播放，或者距离上次播放时间足够长
+                selectSound->play();
+                lastSelectSoundTime = currentTime; // 更新播放时间
+            }
+
+            // 处理物品按钮焦点
+            if (event->type() == QEvent::FocusIn) {
+
+                if (watched == itemButton1) {
+                    infoLabel->setText("* 小鹿包 - 鲜嫩可口，恢复 20 HP。");
+                    return false; // 返回 false，让默认的焦点处理（如样式变化）继续
+                } else if (watched == itemButton2) {
+                    infoLabel->setText("* 蛋包饭 - 恢复 35 HP。");
+                    return false;
+                } else if (watched == itemButton3) {
+                    infoLabel->setText("* 面包做的鹿角! - 恢复 25 HP。");
+                    return false;
+                }
+                // 焦点在其他按钮上，返回 false
+                return false;
+            }
+            return false;
+        }
+        return false;
+    }
     // 处理鼠标悬停自动聚焦
     QPushButton *button = qobject_cast<QPushButton*>(watched);
     if (button && event->type() == QEvent::Enter) {
@@ -224,22 +366,7 @@ bool BattleWidget::eventFilter(QObject *watched, QEvent *event)
             button->setFocus();
         }
     }
-    // 处理物品按钮焦点
-    if (event->type() == QEvent::FocusIn) {
 
-        if (watched == itemButton1) {
-            infoLabel->setText("* 小鹿包 - 鲜嫩可口，恢复 20 HP。");
-            return false; // 返回 false，让默认的焦点处理（如样式变化）继续
-        } else if (watched == itemButton2) {
-            infoLabel->setText("* 另一个小鹿包 - 恢复 20 HP。");
-            return false;
-        } else if (watched == itemButton3) {
-            infoLabel->setText("* 面包做成的鹿角！ - 恢复 35 HP。");
-            return false;
-        }
-        // 焦点在其他按钮上，返回 false
-        return false;
-    }
     // 处理全局 Enter
     else if (event->type() == QEvent::KeyPress)
     {
@@ -259,6 +386,7 @@ bool BattleWidget::eventFilter(QObject *watched, QEvent *event)
                 return true;
             }
         }
+    }
     }
     // 其他事件基类处理
     return QWidget::eventFilter(watched, event);
@@ -398,14 +526,11 @@ void BattleWidget::setEnemyEffect(const QString& imagePath)
 // --- 修改玩家 HP  ---
 void BattleWidget::modifyHp(int amount)
 {
-    if(amount == 0)return;
-
     int previousHp = playerCurrentHp;
     int newHp = playerCurrentHp + amount;
     newHp = qBound(0, newHp, playerMaxHp);  //检查边界
 
     if(hpfix == false)playerCurrentHp = newHp;
-
     updateHpDisplay();
 
     if (amount < 0) {
@@ -416,7 +541,6 @@ void BattleWidget::modifyHp(int amount)
     } else if (amount > 0) {
         healSound->play();
     }
-
 }
 
 // --- 更新 HP 显示的辅助函数 ---
@@ -449,6 +573,23 @@ void BattleWidget::handlePlayerDeath()
     attackSound->setVolume(0);
     beatSound->setVolume(0);
     fistSound->setVolume(0);
+    hurt1->setVolume(0);
+    hurt2->setVolume(0);
+    hurt3->setVolume(0);
+    hurt4->setVolume(0);
+    hurt5->setVolume(0);
+    hurt6->setVolume(0);
+    attack1->setVolume(0);
+    attack2->setVolume(0);
+    attack3->setVolume(0);
+    attack4->setVolume(0);
+    apexfistattack->setVolume(0);
+    scissorattack->setVolume(0);
+    yummy->setVolume(0);
+    xlbyummy->setVolume(0);
+    jvranlaiwenwo->setVolume(0);
+    unforgivable->setVolume(0);
+    terr->setVolume(0);
 
     QTimer::singleShot(1000 , this, [this](){
         //更新 UI
@@ -485,29 +626,66 @@ void BattleWidget::handlePlayerDeath()
         enemyEffectLabel->hide();
         enemyDialogueLabel->hide();
     });
+    QTimer::singleShot(2000 , this, [this](){if(sound)playerdead->play();});
 }
 
 // --- 修改敌人 HP ---
 void BattleWidget::modifyEnemyHp(int amount)
 {
-    int previousHp = enemyCurrentHp;
-    int newHp = enemyCurrentHp + amount;
-    newHp = qBound(0, newHp, enemyMaxHp);
+    if(amount == 0)return;
+    if(round<=8){
+        setEnemySprite("./ktresources/images/kano/k08.png");
+        QTimer::singleShot(1500 , this, [this](){ setEnemySprite(ENEMY_SPRITE_PATH);});
+    }else{
+        if(round>=16){
+            if (amount < 0){
 
-    // --- 更新内部状态 ---
-    enemyCurrentHp = newHp;
-    updateEnemyHpDisplay();
+                enemyCurrentHp = 10;
+                updateEnemyHpDisplay();
 
-    if (amount < 0) {
-        setEnemySprite("./ktresources/images/kano/k04.png");    //受伤效果
-        beatSound->play();
-        QTimer::singleShot(1500, this, [this](){ // 1000ms 后恢复
-            setEnemySprite("./ktresources/images/kano/k01.png");
-        });
-    }
+                setEnemySprite("./ktresources/images/kano/k09.png");    //受伤效果
+                beatSound->play();
+                if(sound)playRandomHurtSound();
+                //finalattack=true;
 
-    if (enemyCurrentHp <= 0 && previousHp > 0) { // 检查是否刚刚被打败
-        handleEnemyDefeat();
+                QTimer::singleShot(2500, this, [this](){ // 2500ms 后恢复
+                    setEnemySprite(ENEMY_SPRITE_PATH);
+                });
+
+            }else{
+                int previousHp = enemyCurrentHp;
+                int newHp = enemyCurrentHp + amount;
+                newHp = qBound(0, newHp, enemyMaxHp);
+
+                enemyCurrentHp = newHp;
+                updateEnemyHpDisplay();
+
+                healSound->play();
+            }
+            //if (enemyCurrentHp <= 0 && previousHp > 0) { // 检查是否刚刚被打败
+            //    handleEnemyDefeat();
+            //}
+        }else{
+            int previousHp = enemyCurrentHp;
+            int newHp = enemyCurrentHp + amount;
+            newHp = qBound(0, newHp, enemyMaxHp);
+
+            enemyCurrentHp = newHp;
+            updateEnemyHpDisplay();
+
+            if (amount < 0) {
+                setEnemySprite("./ktresources/images/kano/k04.png");    //受伤效果
+                beatSound->play();
+                if(sound)playRandomHurtSound();
+                QTimer::singleShot(1500, this, [this](){ // 1500ms 后恢复
+                    setEnemySprite(ENEMY_SPRITE_PATH);
+                });
+            }else{healSound->play();}
+
+            //if (enemyCurrentHp <= 0 && previousHp > 0) { // 检查是否刚刚被打败
+            //    handleEnemyDefeat();
+            //}
+        }
     }
 }
 
@@ -522,7 +700,7 @@ void BattleWidget::updateEnemyHpDisplay()
 // --- 处理敌人死亡 ---
 void BattleWidget::handleEnemyDefeat()
 {
-    //startDialogue("* 敌人被打败了！\n* 你赢了！");
+    //startDialogue("* 敌人被打败了!\n* 你赢了!");
 
     if (enemySpriteLabel) enemySpriteLabel->hide();
     if (enemyHpProgressBar) enemyHpProgressBar->hide();
@@ -604,6 +782,7 @@ void BattleWidget::startGameLoop() {
         actButton->setEnabled(false);
         itemButton->setEnabled(false);
         mercyButton->setEnabled(false);
+        settingsButton->setEnabled(false);
         battleBoxFrame->setStyleSheet(
             "QFrame {"
             "   background-color: black;"
@@ -634,6 +813,7 @@ void BattleWidget::stopGameLoop() {
     actButton->setEnabled(true);
     itemButton->setEnabled(true);
     mercyButton->setEnabled(true);
+    settingsButton->setEnabled(true);
 
     // 隐藏并清理视图对场景的引用
     if (gameView) {
@@ -724,7 +904,7 @@ void BattleWidget::updateGame() {
 
 
     if(playerHeart->isVisible()){
-       playerHeart->setFocus();
+        playerHeart->setFocus();
     }else{
         currentAttackStickPtr->setFocus();
     }
@@ -777,8 +957,8 @@ void BattleWidget::startAttack(){
     attackSound->play();
 
     stick->startMovingTimer();
-    stick->setFocus();
-    qDebug() << "AttackStick spawned and started. Pointer:" << currentAttackStickPtr;
+    //stick->setFocus();
+    attacking = true;
     QTimer::singleShot(1170, this, [this,stick](){
         if(stick->getMoving())
             stick->setVisible(false);
@@ -1631,7 +1811,9 @@ void BattleWidget::setupUi()
     enemyEffectLabel->setAlignment(Qt::AlignTop);
 
     enemyHpProgressBar = new QProgressBar(battleBoxFrame); //敌人血条
-    enemyHpProgressBar->setFormat("%p/100");
+    enemyHpProgressBar->setMaximum(INITIAL_ENEMY_MAX_HP);
+    enemyHpProgressBar->setValue(INITIAL_ENEMY_CURRENT_HP);
+    enemyHpProgressBar->setFormat("%v/%m");
     enemyHpProgressBar->setTextVisible(true);
     enemyHpProgressBar->setFixedHeight(20);
     enemyHpProgressBar->setMaximumWidth(200);
@@ -1655,10 +1837,10 @@ void BattleWidget::setupUi()
     QLabel* actLabel = new QLabel("行动选项:", actMenuPage);
     //QPushButton* checkButton = new QPushButton(" * 查看", actMenuPage);
     checkButton = new QPushButton(" * 查看", actMenuPage);
-    QPushButton* talkButton = new QPushButton(" * 交谈", actMenuPage);
-    QPushButton* askButton = new QPushButton(" * 询问", actMenuPage);
-    QPushButton* fondleButton = new QPushButton(" * 抚摸", actMenuPage);
-    QPushButton* threatenButton = new QPushButton(" * 威胁", actMenuPage);
+    talkButton = new QPushButton(" * 交谈", actMenuPage);
+    askButton = new QPushButton(" * 询问", actMenuPage);
+    fondleButton = new QPushButton(" * 抚摸", actMenuPage);
+    threatenButton = new QPushButton(" * 威胁", actMenuPage);
     QPushButton* emptyButton = new QPushButton("", actMenuPage);
     connect(checkButton, &QPushButton::clicked, this, &BattleWidget::onActCheckClicked);
     connect(talkButton, &QPushButton::clicked, this, &BattleWidget::onActTalkClicked);
@@ -1698,10 +1880,10 @@ void BattleWidget::setupUi()
     QHBoxLayout *itemMenuLayout1=new QHBoxLayout(itemMenuPage);
     QVBoxLayout *itemMenuLayoutL = new QVBoxLayout(itemMenuPage);
     itemButton1 = new QPushButton(" * 小鹿包", itemMenuPage);
-    itemButton2 = new QPushButton(" * 小鹿包", itemMenuPage);
+    itemButton2 = new QPushButton(" * 蛋包饭", itemMenuPage);
     itemButton3 = new QPushButton(" * 鹿角面包", itemMenuPage);
     QVBoxLayout *itemMenuLayoutR = new QVBoxLayout(itemMenuPage);
-    infoLabel =new QLabel("* ...", itemMenuPage);
+    infoLabel =new QLabel("", itemMenuPage);
     infoLabel->setAlignment(Qt::AlignCenter);
     //QPushButton* confirmButton = new QPushButton("使用", itemMenuPage);
     connect(itemButton1, &QPushButton::clicked, this, &BattleWidget::onItemButton1Clicked);
@@ -1725,22 +1907,24 @@ void BattleWidget::setupUi()
     itemButton1->setFocusPolicy(Qt::StrongFocus);
     itemButton2->setFocusPolicy(Qt::StrongFocus);
     itemButton3->setFocusPolicy(Qt::StrongFocus);
+    itemButton3->hide();
 
     mercyMenuPage = new QWidget(actionStackedWidget);
     QLabel *enemyName =new QLabel("鹿乃：",mercyMenuPage);
     QVBoxLayout *mercyMenuLayout = new QVBoxLayout(mercyMenuPage);
-    mercyButton1 = new QPushButton(" * 仁慈", mercyMenuPage);
-    QPushButton* escapeButton = new QPushButton(" * 逃跑", mercyMenuPage);
-    connect(mercyButton1, &QPushButton::clicked, this, &BattleWidget::onMercySpareClicked);
+    spareButton = new QPushButton(" * 饶恕", mercyMenuPage);
+    escapeButton = new QPushButton(" * 逃跑", mercyMenuPage);
+    connect(spareButton, &QPushButton::clicked, this, &BattleWidget::onMercySpareClicked);
     connect(escapeButton, &QPushButton::clicked, this, &BattleWidget::onMercyFleeClicked);
     mercyMenuLayout->addWidget(enemyName);
-    mercyMenuLayout->addWidget(mercyButton1);
+    mercyMenuLayout->addWidget(spareButton);
     mercyMenuLayout->addWidget(escapeButton);
     mercyMenuLayout->addStretch();
-    mercyButton1->installEventFilter(this);
+    spareButton->installEventFilter(this);
     escapeButton->installEventFilter(this);
-    mercyButton1->setFocusPolicy(Qt::StrongFocus);
+    spareButton->setFocusPolicy(Qt::StrongFocus);
     escapeButton->setFocusPolicy(Qt::StrongFocus);
+    escapeButton->hide();
 
 
     // 创建 gameView，设置父窗口为 BattleWidget
@@ -1868,7 +2052,7 @@ void BattleWidget::setupUi()
     settingsButton =new QPushButton("设置",battleBoxFrame);
     settingsButton->setFocusPolicy(Qt::NoFocus);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta 0.6",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale beta 0.7",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -2031,10 +2215,10 @@ void BattleWidget::setupStyles()
     buttonFont.setPointSize(48);
 
     // 使按钮可通过键盘/Tab 键聚焦
-    fightButton->setFocusPolicy(Qt::StrongFocus);
-    actButton->setFocusPolicy(Qt::StrongFocus);
-    itemButton->setFocusPolicy(Qt::StrongFocus);
-    mercyButton->setFocusPolicy(Qt::StrongFocus);
+    //fightButton->setFocusPolicy(Qt::StrongFocus);
+    //actButton->setFocusPolicy(Qt::StrongFocus);
+    //itemButton->setFocusPolicy(Qt::StrongFocus);
+    //mercyButton->setFocusPolicy(Qt::StrongFocus);
 
 }
 
@@ -2042,7 +2226,7 @@ void BattleWidget::setupStyles()
 void BattleWidget::startRound()
 {
     switch (round) {
-    case 0:
+    case 0:{
         // 初始对话
         startEDialogue("* 你 \n* 还 是 来 了 。");
         actionStackedWidget->setCurrentWidget(battlePage);
@@ -2064,10 +2248,11 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
+
         if(playerCurrentHp!=0){
             QTimer::singleShot(9700 , this, [this](){
                 setEnemySprite(ENEMY_SPRITE_PATH);
@@ -2076,17 +2261,18 @@ void BattleWidget::startRound()
             });
         }
         round+=1;
-        break;
-    case 1:
-        startEDialogue("* ...");
+        break;}
+    case 1:{
+        startEDialogue("* 难道你认为可以随便打中我吗?");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        spawnBullet();
-        QTimer::singleShot(3000 , this, [this](){ spawnBullet();spawnBullet();});
-        QTimer::singleShot(6000 , this, [this](){ spawnBullet();circleBullet();});
-        QTimer::singleShot(10000 , this, [this](){ circleBullet();circleBullet(); });
-        QTimer::singleShot(16000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound();spawnBullet();});
+        QTimer::singleShot( diaTime+3000 , this, [this](){ spawnBullet();spawnBullet();});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ spawnBullet();circleBullet();});
+        QTimer::singleShot( diaTime+10000 , this, [this](){ circleBullet();circleBullet(); });
+        QTimer::singleShot( diaTime+16000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 startDialogue("* 她就站在那里.");
@@ -2094,43 +2280,46 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 2:
+        break;}
+    case 2:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(2000 , this, [this](){ dogAttack(1,false);dogAttack(2,true);dogAttack(3,false);});
-        QTimer::singleShot(7000 , this, [this](){ dogAttack(1,true);dogAttack(2,false);dogAttack(3,true);});
-        QTimer::singleShot(13000 , this, [this](){
+        QTimer::singleShot( diaTime+2000 , this, [this](){if(sound)playRandomAttackSound();setEnemySprite("./ktresources/images/kano/k03.png"); dogAttack(1,false);dogAttack(2,true);dogAttack(3,false);});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ dogAttack(1,true);dogAttack(2,false);dogAttack(3,true);});
+        QTimer::singleShot( diaTime+13000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 startDialogue("* 她就站在那里.");
                 actionStackedWidget->setCurrentWidget(dialoguePage);
+                setEnemySprite(ENEMY_SPRITE_PATH);
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 3:
+        break;}
+    case 3:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
         //spawnBullet();
-        QTimer::singleShot(2000 , this, [this](){ spawnHomingAttack();});
-        //QTimer::singleShot(8000 , this, [this](){ paddleLaserBullet();});
-        QTimer::singleShot(6000 , this, [this](){ circleBullet(); });
-        QTimer::singleShot(12000 , this, [this](){
+        QTimer::singleShot( diaTime+2000 , this, [this](){ if(sound)scissorattack->play();spawnHomingAttack();});
+        //QTimer::singleShot( diaTime+8000 , this, [this](){ paddleLaserBullet();});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ circleBullet(); });
+        QTimer::singleShot( diaTime+12000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 startDialogue("* 她就站在那里.");
@@ -2138,23 +2327,24 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 4:
+        break;}
+    case 4:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(2000 , this, [this](){ crossArrowAttack();});
-        QTimer::singleShot(4000 , this, [this](){ xcrossArrowAttack();});
-        QTimer::singleShot(6000 , this, [this](){ crossArrowAttack(); });
-        QTimer::singleShot(8000 , this, [this](){ xcrossArrowAttack(); });
-        QTimer::singleShot(10000 , this, [this](){ crossArrowAttack(); });
-        QTimer::singleShot(13000 , this, [this](){
+        QTimer::singleShot( diaTime+2000 , this, [this](){ if(sound)playRandomAttackSound();crossArrowAttack();});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ xcrossArrowAttack();});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ crossArrowAttack(); });
+        QTimer::singleShot( diaTime+8000 , this, [this](){ xcrossArrowAttack(); });
+        QTimer::singleShot( diaTime+10000 , this, [this](){ crossArrowAttack(); });
+        QTimer::singleShot( diaTime+13000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 startDialogue("* 她就站在那里.");
@@ -2162,63 +2352,67 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 5:
+        break;}
+    case 5:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ dogAttack(1,false);dogAttack(3,true);});
-        QTimer::singleShot(4000 , this, [this](){ xcrossArrowAttack();dogAttack(2,true);});
-        QTimer::singleShot(7000 , this, [this](){ dogAttack(1,true);crossArrowAttack();dogAttack(2,false); });
-        QTimer::singleShot(10000 , this, [this](){ xcrossArrowAttack(); });
-        QTimer::singleShot(13500 , this, [this](){ dogAttack(3,false);crossArrowAttack(); });
-        QTimer::singleShot(17000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound(); setEnemySprite("./ktresources/images/kano/k03.png");dogAttack(1,false);dogAttack(3,true);});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ xcrossArrowAttack();dogAttack(2,true);});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ dogAttack(1,true);crossArrowAttack();dogAttack(2,false); });
+        QTimer::singleShot( diaTime+10000 , this, [this](){ xcrossArrowAttack(); });
+        QTimer::singleShot( diaTime+13500 , this, [this](){ dogAttack(3,false);crossArrowAttack(); });
+        QTimer::singleShot( diaTime+17000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 startDialogue("* 她就站在那里.");
                 actionStackedWidget->setCurrentWidget(dialoguePage);
+                 setEnemySprite(ENEMY_SPRITE_PATH);
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 6:
+        break;}
+    case 6:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();});
-        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");setEnemyEffect("");;noteWaveAttack();});
-        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(20000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound();setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();});
+        QTimer::singleShot( diaTime+2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot( diaTime+12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");setEnemyEffect("./ktresources/images/effect/speaker.png");;noteWaveAttack();});
+        QTimer::singleShot( diaTime+13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot( diaTime+17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+20000 , this, [this](){
 
             if(playerCurrentHp!=0){
+                setEnemyEffect("");
                 ENEMY_SPRITE_PATH = "./ktresources/images/kano/k05.png";
                 setEnemySprite(ENEMY_SPRITE_PATH);
                 startDialogue("* 鹿乃看上去有些疲惫.");
@@ -2226,37 +2420,67 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 7:
+        break;}
+    case 7:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,false);glcefAttack(3,false);});
-        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(2,true);});
-        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(2,false);glcefAttack(4,false);});
-        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(3,true);});
-        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(1,true);glcefAttack(3,true);});
-        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(4,false);});
-        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(2,true);glcefAttack(4,true);});
-        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,false);});
-        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(2,false);glcefAttack(3,false);});
-        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);glcefAttack(2,false);glcefAttack(3,false);glcefAttack(4,true);});
-        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(20000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound();setEnemySprite("./ktresources/images/kano/s1.png");setEnemyEffect("./ktresources/images/effect/speaker.png");glcefAttack(1,false);glcefAttack(3,false);});
+        QTimer::singleShot( diaTime+2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(2,true);});
+        QTimer::singleShot( diaTime+3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(2,false);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(1,true);glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(2,true);glcefAttack(4,true);});
+        QTimer::singleShot( diaTime+11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,false);});
+        QTimer::singleShot( diaTime+12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(2,false);glcefAttack(3,false);});
+        QTimer::singleShot( diaTime+14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);glcefAttack(2,false);glcefAttack(3,false);glcefAttack(4,true);});
+        QTimer::singleShot( diaTime+17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+20000 , this, [this](){
+
+            if(playerCurrentHp!=0){
+                setEnemyEffect("");
+                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k05.png";
+                setEnemySprite(ENEMY_SPRITE_PATH);
+                startDialogue("* 歌声伴随回忆响起，你感到罪恶爬上了脊梁.");
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+            }
+
+            //停止弹幕攻击
+            stopGameLoop();battling = false;attacking = false;
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;}
+    case 8:{
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+        int diaTime = 0;
+
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound(); setEnemySprite("./ktresources/images/kano/k03.png");dogAttack(2,false);dogAttack(1,true);spawnBullet();});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ circleBullet();dogAttack(2,true);});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ dogAttack(3,true);spawnBullet();dogAttack(2,false); });
+        QTimer::singleShot( diaTime+13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/k02.png");crossLaserBullet();});
+        QTimer::singleShot( diaTime+14000 , this, [this](){ dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+15000 , this, [this](){ vpaddleLaserBullet(); });
+        QTimer::singleShot( diaTime+18000 , this, [this](){
 
             if(playerCurrentHp!=0){
                 ENEMY_SPRITE_PATH = "./ktresources/images/kano/k05.png";
@@ -2266,51 +2490,25 @@ void BattleWidget::startRound()
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 8:
+        break;}
+    case 9:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ dogAttack(2,false);dogAttack(1,true);spawnBullet();});
-        QTimer::singleShot(4000 , this, [this](){ circleBullet();dogAttack(2,true);});
-        QTimer::singleShot(7000 , this, [this](){ dogAttack(3,true);spawnBullet();dogAttack(2,false); });
-        QTimer::singleShot(13000 , this, [this](){ crossLaserBullet();});
-        QTimer::singleShot(14000 , this, [this](){ dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(15000 , this, [this](){ vpaddleLaserBullet(); });
-        QTimer::singleShot(18000 , this, [this](){
-
-            if(playerCurrentHp!=0){
-                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k05.png";
-                setEnemySprite(ENEMY_SPRITE_PATH);
-                startDialogue("* 歌声伴随回忆响起，你感到罪恶爬上了脊梁.");
-                actionStackedWidget->setCurrentWidget(dialoguePage);
-            }
-
-            //停止弹幕攻击
-            stopGameLoop();
-            this->activateWindow();
-            fightButton->setFocus();
-        });
-        round+=1;
-        break;
-    case 9:
-        startEDialogue("* ...");
-        actionStackedWidget->setCurrentWidget(battlePage);
-        startBattlePrepare();
-
-        QTimer::singleShot(1000 , this, [this](){ fistBullet(243,350,-60);});
-        QTimer::singleShot(3200 , this, [this](){ fistBullet(333,210,20);crossArrowAttack();});
-        QTimer::singleShot(5600 , this, [this](){ fistBullet(363,180,90);xcrossArrowAttack();});
-        QTimer::singleShot(8000 , this, [this](){ fistBullet(383,190,15);crossArrowAttack();});
-        QTimer::singleShot(10600 , this, [this](){ crossArrowAttack();crossLaserBullet();});
-        QTimer::singleShot(12600 , this, [this](){ xcrossArrowAttack();vpaddleLaserBullet(); });
-        QTimer::singleShot(14100 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)apexfistattack->play();fistBullet(243,350,-60);});
+        QTimer::singleShot( diaTime+3200 , this, [this](){ fistBullet(333,210,20);crossArrowAttack();});
+        QTimer::singleShot( diaTime+5600 , this, [this](){ fistBullet(363,180,90);xcrossArrowAttack();});
+        QTimer::singleShot( diaTime+8000 , this, [this](){ fistBullet(383,190,15);crossArrowAttack();});
+        QTimer::singleShot( diaTime+10600 , this, [this](){ crossArrowAttack();crossLaserBullet();setEnemySprite("./ktresources/images/kano/k02.png");});
+        QTimer::singleShot( diaTime+12600 , this, [this](){ xcrossArrowAttack();vpaddleLaserBullet(); });
+        QTimer::singleShot( diaTime+14100 , this, [this](){
 
         if(playerCurrentHp!=0){
             ENEMY_SPRITE_PATH = "./ktresources/images/kano/k06.png";
@@ -2320,109 +2518,256 @@ void BattleWidget::startRound()
         }
 
         //停止弹幕攻击
-        stopGameLoop();
+        stopGameLoop();battling = false;attacking = false;
         this->activateWindow();
         fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 10:
+        break;}
+    case 10:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();});
-        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");circleBullet();});
-        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");circleBullet();});
-        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");dogAttack(3,false);dogAttack(1,true);setEnemyEffect("");;noteWaveAttack();});
-        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");dogAttack(3,false);dogAttack(1,true);});
-        QTimer::singleShot(20000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound();setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();});
+        QTimer::singleShot( diaTime+2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");circleBullet();});
+        QTimer::singleShot( diaTime+3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");circleBullet();});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
+        QTimer::singleShot( diaTime+8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
+        QTimer::singleShot( diaTime+9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
+        QTimer::singleShot( diaTime+10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
+        QTimer::singleShot( diaTime+11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");dogAttack(3,false);dogAttack(1,true);setEnemyEffect("./ktresources/images/effect/speaker.png");noteWaveAttack();});
+        QTimer::singleShot( diaTime+13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");dogAttack(3,false);dogAttack(1,true);});
+        QTimer::singleShot( diaTime+20000 , this, [this](){
 
             if(playerCurrentHp!=0){
+                setEnemyEffect("");
                 startDialogue("* 鹿乃看上去很疲惫.");
                 setEnemySprite(ENEMY_SPRITE_PATH);
                 actionStackedWidget->setCurrentWidget(dialoguePage);
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 11:
+        break;}
+    case 11:{
         startEDialogue("* ...");
         actionStackedWidget->setCurrentWidget(battlePage);
         startBattlePrepare();
+        int diaTime = 0;
 
-        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();glcefAttack(4,false);});
-        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(2,false);});
-        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(3,true);});
-        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,false);});
-        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(2,true);});
-        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(3,true);});
-        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(4,false);});
-        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);});
-        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(2,false);});
-        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(3,false);});
-        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);});
-        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");setEnemyEffect("");;noteWaveAttack();});
-        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,true);glcefAttack(4,false);});
-        QTimer::singleShot(20000 , this, [this](){
+        QTimer::singleShot( diaTime+1000 , this, [this](){ if(sound)playRandomAttackSound();setEnemySprite("./ktresources/images/kano/s1.png");noteBullet();glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(2,false);});
+        QTimer::singleShot( diaTime+3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,false);});
+        QTimer::singleShot( diaTime+5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(2,true);});
+        QTimer::singleShot( diaTime+6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);});
+        QTimer::singleShot( diaTime+9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(2,false);});
+        QTimer::singleShot( diaTime+10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(3,false);});
+        QTimer::singleShot( diaTime+11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);});
+        QTimer::singleShot( diaTime+12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");setEnemyEffect("./ktresources/images/effect/speaker.png");noteWaveAttack();});
+        QTimer::singleShot( diaTime+13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");glcefAttack(1,true);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+20000 , this, [this](){
 
             if(playerCurrentHp!=0){
+                setEnemyEffect("");
                 startDialogue("* 鹿乃看上去很疲惫.");
                 setEnemySprite(ENEMY_SPRITE_PATH);
                 actionStackedWidget->setCurrentWidget(dialoguePage);
             }
 
             //停止弹幕攻击
-            stopGameLoop();
+            stopGameLoop();battling = false;attacking = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 12:
+        break;}
+    case 12:{
+        backgroundMusicPlayer->pause();
         startEDialogue("* ...");
+        startDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
         fightButton->setEnabled(false);
         actButton->setEnabled(false);
         itemButton->setEnabled(false);
         mercyButton->setEnabled(false);
 
 
-        QTimer::singleShot(1000 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(3200 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(5600 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(8000 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(10600 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(12600 , this, [this](){ startEDialogue("* ..."); });
-        QTimer::singleShot(14100 , this, [this](){
+        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 3200 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 5600 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 8000 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 10600 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 12600 , this, [this](){ startEDialogue("* ..."); });
+        QTimer::singleShot( 14100 , this, [this](){
 
             if(playerCurrentHp!=0){
                 forgivable=true;
                 startDialogue("* 鹿乃在饶恕你.");
+                setEnemySprite(ENEMY_SPRITE_PATH);
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                if (battleBoxFrame) {
+                    battleBoxFrame->setStyleSheet(
+                        "QFrame {"
+                        "   background-color: black;"
+                        "   border: 2px solid white;"
+                        "}"
+                        "QLabel {"
+                        "    background-color: transparent;"
+                        "    border: none;"
+                        "}"
+                        );
+                }
+            }
+
+            attacking = false;
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;}
+    case 13:{
+        backgroundMusicPlayer->play();
+        startEDialogue("* 看来还是不行...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+        int diaTime = 0;
+
+        QTimer::singleShot( diaTime+1000 , this, [this](){if(sound)playRandomAttackSound();xcrossArrowAttack(); });
+        QTimer::singleShot( diaTime+1500 , this, [this](){glcefAttack(2,true);});
+        QTimer::singleShot( diaTime+3200 , this, [this](){crossArrowAttack(); });
+        QTimer::singleShot( diaTime+3900 , this, [this](){glcefAttack(2,false);glcefAttack(4,false);});
+        QTimer::singleShot( diaTime+5600 , this, [this](){crossArrowAttack(); });
+        QTimer::singleShot( diaTime+6000 , this, [this](){glcefAttack(1,true);glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+8000 , this, [this](){xcrossArrowAttack(); });
+        QTimer::singleShot( diaTime+8200 , this, [this](){glcefAttack(2,false);glcefAttack(3,false);});
+        QTimer::singleShot( diaTime+10600 , this, [this](){crossArrowAttack(); });
+        QTimer::singleShot( diaTime+11100 , this, [this](){glcefAttack(1,true);glcefAttack(2,true);});
+        QTimer::singleShot( diaTime+12600 , this, [this](){xcrossArrowAttack();spawnBullet(); });
+        QTimer::singleShot( diaTime+13100 , this, [this](){glcefAttack(2,false);glcefAttack(3,true);});
+        QTimer::singleShot( diaTime+15100 , this, [this](){
+
+            if(playerCurrentHp!=0){
+                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k06.png";
+                startDialogue("* 鹿乃看上去很疲惫.");
+                setEnemySprite(ENEMY_SPRITE_PATH);
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+            }
+
+            //停止弹幕攻击
+            stopGameLoop();battling = false;attacking = false;
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;}
+    case 14:{
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+        int diaTime = 0;
+
+        QTimer::singleShot( diaTime+1000 , this, [this](){if(sound)playRandomAttackSound();glcefAttack(1,true);glcefAttack(4,false);circleBullet(); });
+        QTimer::singleShot( diaTime+3200 , this, [this](){dogAttack(2,true);dogAttack(3,false);glcefAttack(1,true); setEnemySprite("./ktresources/images/kano/k03.png"); });
+        QTimer::singleShot( diaTime+5600 , this, [this](){crossArrowAttack();dogAttack(1,false); });
+        QTimer::singleShot( diaTime+8000 , this, [this](){spawnBullet();fistBullet(350,190,60); });
+        QTimer::singleShot( diaTime+10600 , this, [this](){paddleLaserBullet();circleBullet();setEnemySprite("./ktresources/images/kano/k02.png"); });
+        QTimer::singleShot( diaTime+12600 , this, [this](){crossArrowAttack();xcrossArrowAttack();setEnemySprite(ENEMY_SPRITE_PATH); });
+        QTimer::singleShot( diaTime+14100 , this, [this](){
+
+            if(playerCurrentHp!=0){
+                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k07.png";
+                startDialogue("* 鹿乃看上去非常疲惫了.");
+                setEnemySprite(ENEMY_SPRITE_PATH);
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+            }
+
+            //停止弹幕攻击
+            stopGameLoop();battling = false;attacking = false;
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;}
+    case 15:{
+        startEDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(battlePage);
+        startBattlePrepare();
+        int diaTime = 0;
+
+        QTimer::singleShot( diaTime+1000 , this, [this](){
+            if(sound)playRandomAttackSound();
+            setEnemySprite("./ktresources/images/kano/sing.png");
+            setEnemyEffect("./ktresources/images/effect/speaker.png");
+            noteCrossAttack();
+        });
+        QTimer::singleShot( diaTime+20000 , this, [this](){
+
+            if(playerCurrentHp!=0){
+                startDialogue("* 鹿乃看上去非常疲惫了.");
+                setEnemyEffect("");
+                setEnemySprite(ENEMY_SPRITE_PATH);
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+            }
+
+            //停止弹幕攻击
+            stopGameLoop();battling = false;attacking = false;
+            this->activateWindow();
+            fightButton->setFocus();
+        });
+        round+=1;
+        break;}
+    case 16:{
+        backgroundMusicPlayer->pause();
+        startEDialogue("* ...");
+        startDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        fightButton->setEnabled(false);
+        actButton->setEnabled(false);
+        itemButton->setEnabled(false);
+        mercyButton->setEnabled(false);
+
+
+        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 3200 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 5600 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 8000 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 10600 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 12600 , this, [this](){ startEDialogue("* ..."); });
+        QTimer::singleShot( 14100 , this, [this](){
+
+            if(playerCurrentHp!=0){
+                forgivable=true;
+                startDialogue("* 鹿乃在饶恕你.");
+                setEnemySprite(ENEMY_SPRITE_PATH);
                 actionStackedWidget->setCurrentWidget(dialoguePage);
                 fightButton->setEnabled(true);
                 actButton->setEnabled(true);
@@ -2443,106 +2788,56 @@ void BattleWidget::startRound()
 
             }
 
+            attacking = false;battling = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 13:
-        startEDialogue("* 看来还是不行...");
-        actionStackedWidget->setCurrentWidget(battlePage);
-        startBattlePrepare();
-
-        QTimer::singleShot(1000 , this, [this](){ });
-        QTimer::singleShot(3200 , this, [this](){ });
-        QTimer::singleShot(5600 , this, [this](){ });
-        QTimer::singleShot(8000 , this, [this](){ });
-        QTimer::singleShot(10600 , this, [this](){ });
-        QTimer::singleShot(12600 , this, [this](){ });
-        QTimer::singleShot(14100 , this, [this](){
-
-            if(playerCurrentHp!=0){
-                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k06.png";
-                startDialogue("* 鹿乃看上去很疲惫.");
-                setEnemySprite(ENEMY_SPRITE_PATH);
-                actionStackedWidget->setCurrentWidget(dialoguePage);
-            }
-
-            //停止弹幕攻击
-            stopGameLoop();
-            this->activateWindow();
-            fightButton->setFocus();
-        });
-        round+=1;
-        break;
-    case 14:
+        break;}
+    case 17:{
         startEDialogue("* ...");
-        actionStackedWidget->setCurrentWidget(battlePage);
-        startBattlePrepare();
+        startDialogue("* ...");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        fightButton->setEnabled(false);
+        actButton->setEnabled(false);
+        itemButton->setEnabled(false);
+        mercyButton->setEnabled(false);
 
-        QTimer::singleShot(1000 , this, [this](){ });
-        QTimer::singleShot(3200 , this, [this](){ });
-        QTimer::singleShot(5600 , this, [this](){ });
-        QTimer::singleShot(8000 , this, [this](){ });
-        QTimer::singleShot(10600 , this, [this](){ });
-        QTimer::singleShot(12600 , this, [this](){ });
-        QTimer::singleShot(14100 , this, [this](){
+        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* ...");});
+        QTimer::singleShot( 14100 , this, [this](){
 
             if(playerCurrentHp!=0){
-                ENEMY_SPRITE_PATH = "./ktresources/images/kano/k07.png";
-                startDialogue("* 鹿乃看上去非常疲惫了.");
+                forgivable=true;
+                startDialogue("* 鹿乃在饶恕你.");
                 setEnemySprite(ENEMY_SPRITE_PATH);
                 actionStackedWidget->setCurrentWidget(dialoguePage);
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                if (battleBoxFrame) {
+                    battleBoxFrame->setStyleSheet(
+                        "QFrame {"
+                        "   background-color: black;"
+                        "   border: 2px solid white;"
+                        "}"
+                        "QLabel {"
+                        "    background-color: transparent;"
+                        "    border: none;"
+                        "}"
+                        );
+                }
+
             }
 
-            //停止弹幕攻击
-            stopGameLoop();
+            attacking = false;battling = false;
             this->activateWindow();
             fightButton->setFocus();
         });
         round+=1;
-        break;
-    case 15:
-        startEDialogue("* ...");
-        actionStackedWidget->setCurrentWidget(battlePage);
-        startBattlePrepare();
-
-        QTimer::singleShot(1000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");noteCrossAttack();});
-        QTimer::singleShot(2000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(3000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(4000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(5000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(6000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(7000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(8000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(9000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(10000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(11000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(12000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(13000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(14000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(15000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s5.png");});
-        QTimer::singleShot(16000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s1.png");});
-        QTimer::singleShot(17000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s2.png");});
-        QTimer::singleShot(18000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s3.png");});
-        QTimer::singleShot(19000 , this, [this](){ setEnemySprite("./ktresources/images/kano/s4.png");});
-        QTimer::singleShot(20000 , this, [this](){
-
-            if(playerCurrentHp!=0){
-                startDialogue("* 鹿乃看上去非常疲惫了.");
-                setEnemySprite(ENEMY_SPRITE_PATH);
-                actionStackedWidget->setCurrentWidget(dialoguePage);
-            }
-
-            //停止弹幕攻击
-            stopGameLoop();
-            this->activateWindow();
-            fightButton->setFocus();
-        });
-        round+=1;
-        break;
-    default:
-        ;
+        break;}
+    default:{
+        ;}
     }
 }
 
@@ -2558,6 +2853,7 @@ void BattleWidget::startBattlePrepare()
         QTimer::singleShot(0, this, [this](){ // 延迟 0ms 意味着在下一个事件循环设置
             playerHeart->setFocus();
         });
+        battling = true;
         startGameLoop();
     }
 }
@@ -2565,104 +2861,430 @@ void BattleWidget::startBattlePrepare()
 // --- 动作按钮槽 ---
 void BattleWidget::onFightClicked()
 {
-    actionStackedWidget->setCurrentWidget(attackPage);
-    startBattlePrepare();
-    startAttack();
-    QTimer::singleShot(2000, this, [this](){
-        stopGameLoop();
+    if(round<=16){
+        actionStackedWidget->setCurrentWidget(attackPage);
+        startBattlePrepare();
+        startAttack();
+        QTimer::singleShot(2000, this, [this](){
+            stopGameLoop();
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+            this->activateWindow();
+            fightButton->setFocus();
+            startRound();
+        });
+    }else{
+        fightButton->setEnabled(false);
+        actButton->setEnabled(false);
+        itemButton->setEnabled(false);
+        mercyButton->setEnabled(false);
         actionStackedWidget->setCurrentWidget(dialoguePage);
-        this->activateWindow();
-        fightButton->setFocus();
-        startRound();
-    });
+        switch (insistAttackTimes) {
+        case 0:
+            startDialogue("* 真的要这样做吗?");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 1:
+            startDialogue("* emmm，给你一个重新考虑的机会.");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 2:
+            startDialogue("* 泥忍心吗？");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 3:
+            startDialogue("* 比起阅读这句话，你更应该重新考虑一下你的想法.");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 4:
+            startDialogue("* ......");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 5:
+            startDialogue("* .....?");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 6:
+            startDialogue("* ??????");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 7:
+            startDialogue("* 补药！\n     {{{(>_<)}}}");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            insistAttackTimes+=1;
+            break;
+        case 8:
+            startDialogue("* 好了.");
+            QTimer::singleShot( 1500 , this, [this](){startDialogue("* 我不装了.");});
+            QTimer::singleShot( 3000 , this, [this](){startDialogue("* 窝药摊牌了.");});
+            QTimer::singleShot( 4500 , this, [this](){startDialogue("* 窝系游戏作者.");});
+            QTimer::singleShot( 7000 , this, [this](){startDialogue("* 窝根本没写扣除鹿乃血量到0的代码实现!\n     ~(￣▽￣)~☆\n哈哈哈哈哈哈哈哈哈哈哈...");});
+            QTimer::singleShot( 11000 , this, [this](){startDialogue("* 对于你这冥顽不化的家伙...\n必须给点惩罚才好!\n     ψ(｀∇´)ψ");});
+            QTimer::singleShot( 15000 , this, [this](){startDialogue("* 西内！！！！\n     <(￣︶￣)↗");});
+            QTimer::singleShot( 17000 , this, [this](){
+                actionStackedWidget->setCurrentWidget(battlePage);
+                startBattlePrepare();
+
+                QTimer::singleShot( 500 , this, [this](){modifyHp(-100);});
+                QTimer::singleShot( 2000 , this, [this](){
+                    //停止弹幕攻击
+                    stopGameLoop();battling = false;attacking = false;
+                    this->activateWindow();
+                    //fightButton->setFocus();
+                });
+
+            });
+            break;
+        default:
+            startDialogue("* 真的要这样做吗?");
+            QTimer::singleShot( 3000 , this, [this](){
+                startDialogue("* 鹿乃在饶恕你.");
+                fightButton->setEnabled(true);
+                actButton->setEnabled(true);
+                itemButton->setEnabled(true);
+                mercyButton->setEnabled(true);
+                fightButton->setFocus();
+            });
+            break;
+        }
+    }
 }
 
 
 void BattleWidget::onActClicked()
 {
+    if(round<13||(round>=14&&round<=16)||forgived){
     actionStackedWidget->setCurrentWidget(actMenuPage);
     actionStackedWidget->show();
-    checkButton->setFocus(Qt::MouseFocusReason);
+    checkButton->setFocus(Qt::MouseFocusReason);}
 }
 
 void BattleWidget::onItemClicked()
 {
-    actionStackedWidget->setCurrentWidget(itemMenuPage);
-    actionStackedWidget->show();
-    itemButton1->setFocus(Qt::MouseFocusReason);
+    if(round<13||(round>=14&&round<=16)||forgived){
+        actionStackedWidget->setCurrentWidget(itemMenuPage);
+        actionStackedWidget->show();
+        if(item1used){
+            if(item2used){
+                if(!item3got){
+                    infoLabel->setText("* 没有物品了...");
+                }else{
+                    if(item3used){
+                        infoLabel->setText("* 没有物品了...");
+                    }else{
+                        itemButton3->setFocus(Qt::MouseFocusReason);
+                    }
+                }
+            }else{
+                itemButton2->setFocus(Qt::MouseFocusReason);
+            }
+        }else{
+            itemButton1->setFocus(Qt::MouseFocusReason);
+        }
+    }
 }
 
 void BattleWidget::onMercyClicked()
 {
     actionStackedWidget->setCurrentWidget(mercyMenuPage);
     actionStackedWidget->show();
-    mercyButton1->setFocus(Qt::MouseFocusReason);
+    spareButton->setFocus(Qt::MouseFocusReason);
 }
 
 // --- 行动菜单 ---
 void BattleWidget::onActCheckClicked() {
-    startDialogue("* 鹿乃 - 攻击  防御  \n* ...");
+    startDialogue("* 鹿乃 - 攻击20 防御14 \n* 试图用天使的歌声召唤你的灵魂.");
     actionStackedWidget->setCurrentWidget(dialoguePage);
+    QTimer::singleShot(4000, this, [this](){
+        startRound();
+    });
 }
 
 void BattleWidget::onActTalkClicked() {
-    startDialogue("* ...\n* ...");
-    actionStackedWidget->setCurrentWidget(dialoguePage);
+    switch (talkround) {
+    case 0:
+
+        talkround+=1;
+        break;
+    case 1:
+        talkround+=1;
+        break;
+    case 2:
+        talkround+=1;
+        break;
+    case 3:
+        talkround+=1;
+        break;
+    default:
+        startDialogue("* 没有什么可以说的...");
+        QTimer::singleShot(1000, this, [this](){
+            startEDialogue("* ...");
+        });
+        QTimer::singleShot(3000, this, [this](){
+            startRound();
+        });
+    }
 }
 
 void BattleWidget::onActAskClicked() {
-    startDialogue("* ...\n* ...");
-    actionStackedWidget->setCurrentWidget(dialoguePage);
+    switch (askround) {
+    case 0:
+        startDialogue("* 你问了鹿乃一道高等数学题.\n* 她感到困惑.");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        QTimer::singleShot(1000, this, [this](){
+            setEnemySprite("./ktresources/images/kano/confused.png");
+            startEDialogue("* ???");
+        });
+        QTimer::singleShot(4500, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+        });
+        QTimer::singleShot(4500, this, [this](){
+            startRound();
+        });
+        askround+=1;
+        break;
+    case 1:
+        startDialogue("* 你问鹿乃圣诞节给女朋友送什么礼物...");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        QTimer::singleShot(1000, this, [this](){
+            setEnemySprite("./ktresources/images/kano/angry.png");
+            if(sound){edialogueSound->setVolume(0.0);jvranlaiwenwo->play();}
+            startEDialogue("* 居然来问我...?");
+        });
+        QTimer::singleShot(4500, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+        });
+        QTimer::singleShot(4500, this, [this](){
+            if(sound){edialogueSound->setVolume(1.0);}
+            startRound();
+        });
+        askround+=1;
+        break;
+    case 2:
+        startDialogue("* 你问鹿乃要不要吃小鹿包.");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        QTimer::singleShot(1000, this, [this](){
+            setEnemySprite("./ktresources/images/kano/e1.png");
+            if(sound){edialogueSound->setVolume(0.0);xlbyummy->play();}
+            startEDialogue("* 小鹿包，Yummy!");
+        });
+        QTimer::singleShot(4500, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+        });
+        QTimer::singleShot(4500, this, [this](){
+            if(sound){edialogueSound->setVolume(1.0);}
+            startRound();
+        });
+        askround+=1;
+        break;
+    default:
+        startDialogue("* 没有什么可以问的...");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        QTimer::singleShot(1000, this, [this](){
+            startEDialogue("* ...");
+        });
+        QTimer::singleShot(3000, this, [this](){
+            startRound();
+        });
+    }
 }
 
 void BattleWidget::onActFondleClicked() {
-    startDialogue("* ...\n* ...");
     actionStackedWidget->setCurrentWidget(dialoguePage);
+    if(bread==false){
+        startDialogue("* 你摸了摸鹿乃的头.\n* 你获得了鹿角面包!");
+        item3got=true;
+        QTimer::singleShot(300, this, [this](){
+            getitemSound->play();
+        });
+        itemButton3->show();
+        QTimer::singleShot(1000, this, [this](){
+            if(sound){edialogueSound->setVolume(0.0);unforgivable->play();}
+            setEnemySprite("./ktresources/images/kano/angry.png");
+            startEDialogue("* 不可饶恕...");
+        });
+        QTimer::singleShot(4000, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+            if(sound){edialogueSound->setVolume(0.0);}
+        });
+        QTimer::singleShot(4000, this, [this](){
+            startRound();
+        });
+        bread=true;
+    }else{
+        startDialogue("* 你尝试摸鹿乃的头，但是她躲开了.");
+        QTimer::singleShot(1000, this, [this](){
+            setEnemySprite("./ktresources/images/kano/angry.png");
+            startEDialogue("* 还来?");
+        });
+        QTimer::singleShot(4000, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+        });
+        QTimer::singleShot(4000, this, [this](){
+            startRound();
+        });
+    }
 }
 
 void BattleWidget::onActThreatenClicked() {
-    startDialogue("* ...\n* ...");
     actionStackedWidget->setCurrentWidget(dialoguePage);
+    if(threaten==false){
+        startDialogue("* 你警告鹿乃不要挡在你的前面.");
+        QTimer::singleShot(1000, this, [this](){
+            //setEnemySprite("./ktresources/images/kano/terr.png");
+            startEDialogue("* ...");
+            startDialogue("* 鹿乃有些害怕.");
+            if(sound){edialogueSound->setVolume(0.0);hurt3->play();}
+        });
+        QTimer::singleShot(3000, this, [this](){
+            //setEnemySprite(ENEMY_SPRITE_PATH);
+            if(sound){edialogueSound->setVolume(1.0);}
+        });
+        QTimer::singleShot(3500, this, [this](){
+            startRound();
+        });
+        threaten=true;
+    }else{
+        startDialogue("* 你威胁鹿乃你会很快杀掉她.");
+        QTimer::singleShot(1000, this, [this](){
+            setEnemySprite("./ktresources/images/kano/terr.png");
+            //if(sound){edialogueSound->setVolume(0.0);hurt3->play();}
+            startEDialogue("* ...");
+            startDialogue("* 鹿乃害怕地发抖.");
+            if(sound){edialogueSound->setVolume(0.0);terr->play();}
+        });
+        QTimer::singleShot(3000, this, [this](){
+            setEnemySprite(ENEMY_SPRITE_PATH);
+        });
+        QTimer::singleShot(4000, this, [this](){
+            if(sound){edialogueSound->setVolume(1.0);}
+            startRound();
+        });
+    }
 }
 
 // --- 物品菜单 ---
 void BattleWidget::onItemButton1Clicked() {
-
-    startDialogue("* 你使用了小鹿包.\n* 恢复了 20 HP！");
-    actionStackedWidget->setCurrentWidget(dialoguePage);
-
-    modifyHp(20);
-    itemButton1->hide();
-
-    QTimer::singleShot(2000 , this, [this](){ startRound();});
+    if(!forgived){
+        startDialogue("* 你使用了小鹿包.\n* 恢复了 20 HP!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyHp(20);
+        itemButton1->hide();
+        item1used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }else{
+        startDialogue("* 鹿乃吃掉了小鹿包!\n* 恢复了 150 HP!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyEnemyHp(150);
+        itemButton1->hide();
+        item1used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }
 }
 
 void BattleWidget::onItemButton2Clicked() {
-
-    startDialogue("* 你使用了小鹿包.\n* 恢复了 20 HP！");
-    actionStackedWidget->setCurrentWidget(dialoguePage);
-
-    modifyHp(20);
-    itemButton2->hide();
-
-    QTimer::singleShot(2000 , this, [this](){ startRound();});
+    if(!forgived){
+        startDialogue("* 你吃掉了蛋包饭.\n* 恢复了 35 HP!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyHp(35);
+        itemButton2->hide();
+        item2used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }else{
+        startDialogue("* 鹿乃吃掉了蛋包饭!\n* HP 完全恢复了!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyEnemyHp(500);
+        itemButton2->hide();
+        item2used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }
 }
 
 void BattleWidget::onItemButton3Clicked() {
-
-    startDialogue("* 你使用了鹿角面包.\n* 恢复了 35 HP！");
-    actionStackedWidget->setCurrentWidget(dialoguePage);
-
-    modifyHp(35);
-    itemButton3->hide();
-
-    QTimer::singleShot(2000 , this, [this](){ startRound();});
+    if(!forgived){
+        startDialogue("* 你吃掉了鹿角面包.\n* 恢复了 25 HP!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyHp(25);
+        itemButton3->hide();
+        item3used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }else{
+        startDialogue("* 鹿乃吃掉了鹿角面包!\n* 恢复了 240 HP!");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyEnemyHp(240);
+        itemButton3->hide();
+        item3used=true;
+        QTimer::singleShot(2000 , this, [this](){ startRound();});
+    }
 }
 
 // --- 仁慈菜单 ---
 void BattleWidget::onMercySpareClicked() {
 
     if(forgivable==true){
+        backgroundMusicPlayer->stop();
         startDialogue("* ...");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(1000 , this, [this](){ startEDialogue("* ...");});
@@ -2674,8 +3296,13 @@ void BattleWidget::onMercySpareClicked() {
 
         //结束游戏
         //......
+        QTimer::singleShot(16000 , this, [this](){ });
+        fightButton->setEnabled(false);
+        actButton->setEnabled(false);
+        itemButton->setEnabled(false);
+        mercyButton->setEnabled(false);
     }else{
-        startDialogue("* ...");
+        startDialogue("* 已经无法回去了，不是吗?");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(2000 , this, [this](){ startRound();});
     }

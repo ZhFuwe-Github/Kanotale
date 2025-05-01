@@ -36,9 +36,9 @@ public:
     ~BattleWidget();
 
     //设置
-    bool hpfix=0;
-    bool sound=1;
-    bool l=1;
+    bool hpfix=false;
+    bool sound=false;
+    //bool l=1;//?
 
      void startDialogue(const QString& text);
      void setEnemySprite(const QString& imagePath);
@@ -178,10 +178,15 @@ private:
 
     QStackedWidget *actionStackedWidget; // 放置行动、仁慈、物品菜单、攻击框、战斗框、对话窗口
     QWidget *actMenuPage;
-    QPushButton *checkButton;//每个页面需要自动获得焦点的button
+    QPushButton *checkButton;
+    QPushButton *talkButton;
+    QPushButton *askButton;
+    QPushButton *fondleButton;
+    QPushButton *threatenButton;
     QWidget *itemMenuPage;
     QWidget *mercyMenuPage;
-    QPushButton* mercyButton1;
+    QPushButton* spareButton;
+    QPushButton *escapeButton;
     QWidget *battlePage; // 战斗弹幕页面
     QWidget *dialoguePage;
     QWidget *attackPage;
@@ -222,9 +227,23 @@ private:
     int enemyMaxHp;
     int enemyCurrentHp;
     bool forgivable = false;
+    bool forgived = false;
 
-    //控制游戏进度
-    int round = 1;
+    //游戏进度
+    int round = 15;
+    int talkround = 0;
+    int askround = 0;
+    bool bread = false;
+    bool threaten = false;
+    bool item1used = false;
+    bool item2used = false;
+    bool item3got = false;
+    bool item3used = false;
+    //bool finalattack = false;
+    int insistAttackTimes = 0;
+
+    bool attacking = false;
+    bool battling = false;
 
     const int FULL_SCENE_WIDTH = 720;
     const int FULL_SCENE_HEIGHT = 480;
@@ -262,6 +281,34 @@ private:
     QSoundEffect *attackSound;
     QSoundEffect *beatSound;
     QSoundEffect *fistSound;
+
+    //避免按键音重复播放
+    QElapsedTimer selectSoundTimer;
+    qint64 lastSelectSoundTime = -1; // 上次播放时间戳
+    const int SELECT_SOUND_DEBOUNCE = 20;
+
+    //鹿鸣
+    QSoundEffect *hurt1;
+    QSoundEffect *hurt2;
+    QSoundEffect *hurt3;
+    QSoundEffect *hurt4;
+    QSoundEffect *hurt5;
+    QSoundEffect *hurt6;
+    QSoundEffect *attack1;
+    QSoundEffect *attack2;
+    QSoundEffect *attack3;
+    QSoundEffect *attack4;
+    QSoundEffect *apexfistattack;
+    QSoundEffect *scissorattack;
+    QSoundEffect *yummy;
+    QSoundEffect *xlbyummy;
+    QSoundEffect *jvranlaiwenwo;
+    QSoundEffect *playerdead;
+    QSoundEffect *unforgivable;
+    QSoundEffect *terr;
+
+    void playRandomHurtSound();
+    void playRandomAttackSound();
 };
 
 #endif // WIDGET_H
