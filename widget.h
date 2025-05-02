@@ -100,9 +100,12 @@ private:
     void loadSmallCustomFont();
     void loadAndSetPixmap(QLabel* label, const QString& path, const QSize& targetSize);
     QMediaPlayer *backgroundMusicPlayer = nullptr; // 背景音乐播放器
+    QMediaPlayer *mercyBackgroundMusicPlayer = nullptr;
     QAudioOutput *audioOutput = nullptr; // Qt 6 需要指定音频输出
     void setupBackgroundMusic(); // 设置背景音乐
+    void setupMercyBackgroundMusic();
     void playBackgroundMusic();
+    void playMercyBackgroundMusic();
 
     void updateHpDisplay(); // 更新 HP 显示
     void handlePlayerDeath(); // 处理玩家死亡
@@ -230,7 +233,7 @@ private:
     bool forgived = false;
 
     //游戏进度
-    int round = 15;
+    int round = 0;
     int talkround = 0;
     int askround = 0;
     bool bread = false;
@@ -241,6 +244,7 @@ private:
     bool item3used = false;
     //bool finalattack = false;
     int insistAttackTimes = 0;
+    QString formerDialogueText;
 
     bool attacking = false;
     bool battling = false;

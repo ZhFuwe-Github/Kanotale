@@ -70,7 +70,9 @@ int main(int argc, char *argv[])
 
     BattleWidget w;
     w.setWindowTitle("Kanotale");
-    w.resize(480, 720);
+    w.resize(800,800);
+    w.setMinimumSize(QSize(800,800));
+    w.setMaximumSize(QSize(800,800));
     w.show();
 
     return a.exec();

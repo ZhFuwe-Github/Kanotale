@@ -100,3 +100,11 @@ install(TARGETS kanotale
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(kanotale)
 endif()
+
+set(WINDOWS_ICON_FILE "${CMAKE_CURRENT_SOURCE_DIR}/build/kanotale.ico")
+string(REPLACE "/" "\\\\" WINDOWS_ICON_PATH_RC "${WINDOWS_ICON_FILE}")
+        set(RC_CONTENT "IDI_ICON1 ICON \"${WINDOWS_ICON_PATH_RC}\"\n")
+        set(RC_FILENAME "${CMAKE_CURRENT_BINARY_DIR}/appicon.rc")
+        file(WRITE ${RC_FILENAME} "${RC_CONTENT}")
+        target_sources(kanotale PRIVATE ${RC_FILENAME})
+        message(STATUS "Windows icon set from ${WINDOWS_ICON_FILE}")
