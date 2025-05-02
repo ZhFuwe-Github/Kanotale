@@ -2080,7 +2080,7 @@ void BattleWidget::setupUi()
     settingsButton =new QPushButton("设置",battleBoxFrame);
     settingsButton->setFocusPolicy(Qt::NoFocus);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale beta 0.8 预发布版",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale v1.0.0",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -2372,7 +2372,7 @@ void BattleWidget::startRound()
         //startEDialogue("* ...");
         QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 每一个你遇到的“怪物”...\n它们都有自己的歌,自己的故事.");});
         QTimer::singleShot( 3000 , this, [this](){ startEDialogue("* 你却一次又一次按下静音键...");});
-        int diaTime = 5000;
+        int diaTime = 4000;
 
         //spawnBullet();
         QTimer::singleShot( diaTime+2000 , this, [this](){
@@ -2404,7 +2404,7 @@ void BattleWidget::startRound()
         dialogueLabel->setText(formerDialogueText);
         QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 当世界只剩最后一丝微弱旋律时...");});
         QTimer::singleShot( 3000 , this, [this](){ startEDialogue("* 我必须保护它.");});
-        int diaTime = 4500;
+        int diaTime = 4000;
 
         QTimer::singleShot( diaTime+2000 , this, [this](){
             enemyDialogueLabel->setText("");
@@ -2764,8 +2764,8 @@ void BattleWidget::startRound()
         mercyButton->setEnabled(false);
 
 
-        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 停下来听一听...");playMercyBackgroundMusic();});
-        QTimer::singleShot( 3000 , this, [this](){ startEDialogue("* 这个世界的哭泣.");});
+        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 停下来听一听...");});
+        QTimer::singleShot( 3000 , this, [this](){ startEDialogue("* 这个世界的哭泣.");playMercyBackgroundMusic();});
         QTimer::singleShot( 5500 , this, [this](){ startEDialogue("* 错乱的时间线,被寂灭的灵魂.");});
         QTimer::singleShot( 8000 , this, [this](){ startEDialogue("* 真的只是你提升力量的“道具”吗?");});
         QTimer::singleShot( 10500 , this, [this](){ startEDialogue("* 停下来吧,使用你的能力重置存档,将所有人带回来...");});
@@ -2926,10 +2926,10 @@ void BattleWidget::startRound()
         mercyButton->setEnabled(false);
 
 
-        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 哈... 哈...");playMercyBackgroundMusic();});
+        QTimer::singleShot( 1000 , this, [this](){ startEDialogue("* 哈... 哈...");});
         QTimer::singleShot( 3000 , this, [this](){ startEDialogue("* 看来这次的轮回就到这里了...");});
         QTimer::singleShot( 5500 , this, [this](){ startEDialogue("* 但是...也许...只是也许...现在停下还来得及.");});
-        QTimer::singleShot( 7500 , this, [this](){ startEDialogue("* 未来还有很多空白的乐章在等待着...");});
+        QTimer::singleShot( 7500 , this, [this](){ startEDialogue("* 未来还有很多空白的乐章在等待着...");playMercyBackgroundMusic();});
         QTimer::singleShot( 10000 , this, [this](){ startEDialogue("* 不要再继续下去了.");});
         QTimer::singleShot( 12000 , this, [this](){ startEDialogue("* 这真的是你最初踏上旅途时的愿望吗?"); });
         QTimer::singleShot( 14500 , this, [this](){ startEDialogue("* 造成这一切的那个人...");});
@@ -3206,56 +3206,60 @@ void BattleWidget::onActCheckClicked() {
 void BattleWidget::onActTalkClicked() {
     switch (talkround) {
     case 0:
-        startDialogue("* 你问了鹿乃一道高等数学题.\n* 她感到困惑.");
+        startDialogue("* 你告诉鹿乃阻拦是没有用的.");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(1000, this, [this](){
-            setEnemySprite("./ktresources/images/kano/confused.png");
-            startEDialogue("* ???");
+            //setEnemySprite("./ktresources/images/kano/confused.png");
+            startEDialogue("* 无论重来多少次,我依然会站在这里.");
         });
         QTimer::singleShot(4500, this, [this](){
             setEnemySprite(ENEMY_SPRITE_PATH);
         });
         QTimer::singleShot(4500, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
         talkround+=1;
         break;
     case 1:
-        startDialogue("* 你问了鹿乃一道高等数学题.\n* 她感到困惑.");
+        startDialogue("* 你告诉鹿乃你不想与她战斗.");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(1000, this, [this](){
-            setEnemySprite("./ktresources/images/kano/confused.png");
-            startEDialogue("* ???");
+            //setEnemySprite("./ktresources/images/kano/confused.png");
+            startEDialogue("* 我必须保护这里.");
         });
         QTimer::singleShot(4500, this, [this](){
             setEnemySprite(ENEMY_SPRITE_PATH);
         });
         QTimer::singleShot(4500, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
         talkround+=1;
         break;
     case 2:
-        startDialogue("* 你问了鹿乃一道高等数学题.\n* 她感到困惑.");
+        startDialogue("* 你告诉鹿乃你很关心她的病情.");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(1000, this, [this](){
-            setEnemySprite("./ktresources/images/kano/confused.png");
-            startEDialogue("* ???");
+            setEnemySprite("./ktresources/images/kano/okey.png");
+            startEDialogue("* 不会有事的!");
         });
         QTimer::singleShot(4500, this, [this](){
             setEnemySprite(ENEMY_SPRITE_PATH);
         });
         QTimer::singleShot(4500, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
         talkround+=1;
         break;
     default:
-        startDialogue("* 没有什么可以说的...");
+        startDialogue("* 没有什么可说的...");
         QTimer::singleShot(1000, this, [this](){
             startEDialogue("* ...");
         });
         QTimer::singleShot(3000, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
     }
@@ -3319,6 +3323,7 @@ void BattleWidget::onActAskClicked() {
             startEDialogue("* ...");
         });
         QTimer::singleShot(3000, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
     }
@@ -3343,6 +3348,7 @@ void BattleWidget::onActFondleClicked() {
             if(sound){edialogueSound->setVolume(0.0);}
         });
         QTimer::singleShot(4000, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
         bread=true;
@@ -3356,6 +3362,7 @@ void BattleWidget::onActFondleClicked() {
             setEnemySprite(ENEMY_SPRITE_PATH);
         });
         QTimer::singleShot(4000, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
     }
@@ -3376,6 +3383,7 @@ void BattleWidget::onActThreatenClicked() {
             if(sound){edialogueSound->setVolume(1.0);}
         });
         QTimer::singleShot(3500, this, [this](){
+            enemyDialogueLabel->setText("");
             startRound();
         });
         threaten=true;
@@ -3392,6 +3400,7 @@ void BattleWidget::onActThreatenClicked() {
             setEnemySprite(ENEMY_SPRITE_PATH);
         });
         QTimer::singleShot(4000, this, [this](){
+            enemyDialogueLabel->setText("");
             if(sound){edialogueSound->setVolume(1.0);}
             startRound();
         });
@@ -3408,12 +3417,26 @@ void BattleWidget::onItemButton1Clicked() {
         item1used=true;
         QTimer::singleShot(2000 , this, [this](){ startRound();});
     }else{
-        startDialogue("* 鹿乃吃掉了小鹿包!\n* 恢复了 150 HP!");
-        actionStackedWidget->setCurrentWidget(dialoguePage);
-        modifyEnemyHp(150);
-        itemButton1->hide();
-        item1used=true;
-        QTimer::singleShot(2000 , this, [this](){ startRound();});
+        QTimer::singleShot(0 , this, [this](){
+            startEDialogue("* 小鹿包,yummy!");
+            if(sound){edialogueSound->setVolume(0.0);xlbyummy->play();}
+        });
+        QTimer::singleShot(800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e1.png");});
+        QTimer::singleShot(1000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e2.png");});
+        QTimer::singleShot(1200+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1400+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(1600+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e5.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){
+            startDialogue("* 鹿乃吃掉了小鹿包!\n* 恢复了 150 HP!");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+            modifyEnemyHp(150);
+            itemButton1->hide();
+            item1used=true;
+            if(sound){edialogueSound->setVolume(1.0);}
+        });
+        QTimer::singleShot(5200 , this, [this](){ mercyPlotPart2();});
     }
 }
 
@@ -3424,14 +3447,28 @@ void BattleWidget::onItemButton2Clicked() {
         modifyHp(35);
         itemButton2->hide();
         item2used=true;
-        QTimer::singleShot(2000 , this, [this](){ startRound();});
+        QTimer::singleShot(2000 , this, [this](){
+
+        });
     }else{
-        startDialogue("* 鹿乃吃掉了蛋包饭!\n* HP 完全恢复了!");
-        actionStackedWidget->setCurrentWidget(dialoguePage);
-        modifyEnemyHp(500);
-        itemButton2->hide();
-        item2used=true;
-        QTimer::singleShot(2000 , this, [this](){ startRound();});
+        QTimer::singleShot(0 , this, [this](){
+            startEDialogue("* 蛋包饭!好喜欢这个!");
+        });
+        QTimer::singleShot(800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e1.png");});
+        QTimer::singleShot(1000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e2.png");});
+        QTimer::singleShot(1200+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1400+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(1600+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e5.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){
+            startDialogue("* 鹿乃吃掉了蛋包饭!\n* HP 完全恢复了!");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+            modifyEnemyHp(500);
+            itemButton2->hide();
+            item2used=true;
+        });
+        QTimer::singleShot(4000+1200 , this, [this](){ mercyPlotPart2();});
     }
 }
 
@@ -3444,12 +3481,24 @@ void BattleWidget::onItemButton3Clicked() {
         item3used=true;
         QTimer::singleShot(2000 , this, [this](){ startRound();});
     }else{
-        startDialogue("* 鹿乃吃掉了鹿角面包!\n* 恢复了 240 HP!");
-        actionStackedWidget->setCurrentWidget(dialoguePage);
-        modifyEnemyHp(240);
-        itemButton3->hide();
-        item3used=true;
-        QTimer::singleShot(2000 , this, [this](){ startRound();});
+        QTimer::singleShot(0 , this, [this](){
+            startEDialogue("* 鹿角面包!最好的备用食品!");
+        });
+        QTimer::singleShot(800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e1.png");});
+        QTimer::singleShot(1000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e2.png");});
+        QTimer::singleShot(1200+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1400+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(1600+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e3.png");});
+        QTimer::singleShot(1800+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e4.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){setEnemySprite("./ktresources/images/kano/e5.png");});
+        QTimer::singleShot(2000+1200 , this, [this](){
+            startDialogue("* 鹿乃吃掉了鹿角面包!\n* 恢复了 240 HP!");
+            actionStackedWidget->setCurrentWidget(dialoguePage);
+            modifyEnemyHp(240);
+            itemButton3->hide();
+            item3used=true;
+        });
+        QTimer::singleShot(5200 , this, [this](){ mercyPlotPart2();});
     }
 }
 
@@ -3457,28 +3506,116 @@ void BattleWidget::onItemButton3Clicked() {
 void BattleWidget::onMercySpareClicked() {
 
     if(forgivable==true){
+        forgived=true;
         //backgroundMusicPlayer->stop();
-        startDialogue("* 你选择了饶恕.");
-        actionStackedWidget->setCurrentWidget(dialoguePage);
-        QTimer::singleShot(1000 , this, [this](){ startEDialogue("* 终于啊...");});
-        QTimer::singleShot(3200 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(5600 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(8000 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(10600 , this, [this](){ startEDialogue("* ...");});
-        QTimer::singleShot(12600 , this, [this](){ startEDialogue("* ...");});
+        bool itemleft;
 
-        //结束游戏
-        //......
-        QTimer::singleShot(16000 , this, [this](){ });
         fightButton->setEnabled(false);
         actButton->setEnabled(false);
         itemButton->setEnabled(false);
+        if((item1used&&item2used&&!item3got)||(item1used&&item2used&&item3used)){
+            itemleft=false;
+        }else{itemleft=true;}
         mercyButton->setEnabled(false);
+        dialogueLabel->setText("");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        QTimer::singleShot(1000 , this, [this](){ startEDialogue("* 终于啊...");
+            battleBoxFrame->setStyleSheet(
+                "QFrame {"
+                "   background-color: black;"
+                "   border: 2px solid black;"
+                "}"
+                );
+        });
+        QTimer::singleShot(3000 , this, [this](){ startEDialogue("* 我就知道你心底一定不是那样!");});
+        QTimer::singleShot(5500 , this, [this](){ startEDialogue("* 只要你愿意放下过去的一切.");});
+        QTimer::singleShot(8000 , this, [this](){ startEDialogue("* 所有事情都会好起来的.");
+            setEnemySprite("./ktresources/images/kano/happy.png");});
+        QTimer::singleShot(10500 , this, [this](){ startEDialogue("* 将所有人重新带回来吧!");});
+        QTimer::singleShot(13000 , this, [this](){ startEDialogue("* 我们可以成为朋友,一起游戏,一起生活.");});
+        QTimer::singleShot(15500 , this, [this](){ startEDialogue("* 在这个幽闭的地下世界,再没有什么比彼此更加重要.");});
+        QTimer::singleShot(18500 , this, [this](){ startEDialogue("* 话说...你有什么吃的吗?");
+            setEnemySprite("./ktresources/images/kano/okey.png");
+            battleBoxFrame->setStyleSheet(
+                "QFrame {"
+                "   background-color: black;"
+                "   border: 2px solid white;"
+                "}"
+                "QLabel {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "}"
+                );
+        });
+        QTimer::singleShot(19000 , this, [this, itemleft](){
+            if(itemleft){
+                itemButton->setEnabled(true);
+                itemButton->setFocus();
+            }else{
+                actionStackedWidget->setCurrentWidget(dialoguePage);
+                startDialogue("* 已经没有物品了.");
+            }
+        });
+
+        if(!itemleft){
+            QTimer::singleShot(21000 , this, [this](){ startEDialogue("* 没有关系哦.");});
+            QTimer::singleShot(23500 , this, [this](){ startEDialogue("* 使用你的能力重置这个世界吧.");
+                setEnemySprite("./ktresources/images/kano/happy.png");});
+            QTimer::singleShot(26000 , this, [this](){ startEDialogue("* 一切都会很快回来的!");});
+            QTimer::singleShot(28500 , this, [this](){ startEDialogue("* 那么先再见啦,拜拜!");
+                setEnemySprite("./ktresources/images/kano/okey.png");});
+            QTimer::singleShot(32000 , this, [this](){ handleGameEnd();});
+        }
+
     }else{
         startDialogue("* 已经无法回去了...");
         actionStackedWidget->setCurrentWidget(dialoguePage);
         QTimer::singleShot(2000 , this, [this](){ startRound();});
     }
+}
+
+void BattleWidget::mercyPlotPart2(){
+    dialogueLabel->setText("");
+    setEnemySprite("./ktresources/images/kano/k01.png");
+    startEDialogue("* 恢复了一些体力.");
+    QTimer::singleShot(2000 , this, [this](){ startEDialogue("* 可以使用我的能力了.");
+        setEnemySprite("./ktresources/images/kano/okey.png");});
+    QTimer::singleShot(3400 , this, [this](){
+        startDialogue("* 鹿乃使用了治疗魔法,你的 HP 已满.");
+        actionStackedWidget->setCurrentWidget(dialoguePage);
+        modifyHp(100);
+    });
+    QTimer::singleShot(5000 , this, [this](){ startEDialogue("* 使用你的能力重置这个世界吧.");
+                setEnemySprite("./ktresources/images/kano/happy.png");});
+    QTimer::singleShot(7500 , this, [this](){ startEDialogue("* 一切都会很快回来的!");});
+    QTimer::singleShot(10000 , this, [this](){ startEDialogue("* 那么先再见啦,拜拜!");
+                setEnemySprite("./ktresources/images/kano/okey.png");});
+    QTimer::singleShot(13500 , this, [this](){ handleGameEnd();});
+}
+
+void BattleWidget::handleGameEnd(){
+    actionStackedWidget->setCurrentWidget(dialoguePage);
+    dialogueLabel->setAlignment(Qt::AlignCenter);
+    startDialogue("Kanotale\n\n剧  终");
+
+    fightButton->setEnabled(false);
+    actButton->setEnabled(false);
+    itemButton->setEnabled(false);
+    mercyButton->setEnabled(false);
+    settingsButton->setEnabled(false);
+    fightButton->hide();
+    actButton->hide();
+    itemButton->hide();
+    mercyButton->hide();
+    enemySpriteLabel->hide();
+    enemyHpProgressBar->hide();
+    enemyEffectLabel->hide();
+    enemyDialogueLabel->hide();
+    playerNameLabel->hide();
+    playerLevelLabel->hide();
+    hpProgressBar->hide();
+    hpTextLabel->hide();
+    hpValueLabel->hide();
 }
 
 void BattleWidget::onMercyFleeClicked() {

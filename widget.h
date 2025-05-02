@@ -117,6 +117,9 @@ private:
     void stopGameLoop();   // 停止游戏循环
     void updateGame();     // 处理游戏逻辑（碰撞等）
 
+    void mercyPlotPart2();
+    void handleGameEnd();  // 游戏剧情结束
+
     void startAttack();
     void startBattlePrepare();
     //QPointer<AttackStick> currentAttackStick = nullptr;

@@ -41,8 +41,8 @@ QPainterPath DogBulletItem::shape() const
     // 添加一个正好内切于包围盒的椭圆
     path.addEllipse(rect);
     // 调整椭圆大小
-    qreal paddingX = rect.width() * 0.35; // 水平缩小 35%
-    qreal paddingY = rect.height() * 0.45; // 垂直缩小 45%
+    qreal paddingX = rect.width() * 0.40; // 水平缩小 35%
+    qreal paddingY = rect.height() * 0.5; // 垂直缩小 45%
     QRectF smallerRect = rect.adjusted(paddingX, paddingY, -paddingX, -paddingY);
     path.addEllipse(smallerRect);
 
