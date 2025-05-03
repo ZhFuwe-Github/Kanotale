@@ -19,7 +19,11 @@
 
 
 ## 📺视频链接
-<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=114440561237251&bvid=BV1ycVEzrEM1&cid=29765797217&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+【鹿乃 ╳ Undertale】Kanotale 鹿乃之下 [南开大学25C++]
+
+[![](https://github.com/user-attachments/assets/2117081b-a8f1-4087-ae40-0be1b57145ca)](//player.bilibili.com/player.html?isOutside=true&aid=114440561237251&bvid=BV1ycVEzrEM1&cid=29765797217&p=1)
+
+
 
 ## 📸截图预览
 
