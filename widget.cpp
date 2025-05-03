@@ -301,7 +301,7 @@ void BattleWidget::setupBackgroundMusic()
 
     // 循环播放
     backgroundMusicPlayer->setLoops(QMediaPlayer::Infinite);
-    audioOutput->setVolume(1.0); // 设置音量
+    audioOutput->setVolume(0.8); // 设置音量
 }
 
 void BattleWidget::setupMercyBackgroundMusic()
@@ -2080,7 +2080,7 @@ void BattleWidget::setupUi()
     settingsButton =new QPushButton("设置",battleBoxFrame);
     settingsButton->setFocusPolicy(Qt::NoFocus);
     connect(settingsButton, &QPushButton::clicked, this, &BattleWidget::onSettingsClicked);
-    QLabel *gameInfo = new QLabel("Kanotale v1.0.0",battleBoxFrame);
+    QLabel *gameInfo = new QLabel("Kanotale v1.0.1",battleBoxFrame);
     bottomLayout->addWidget(gameInfo);
     bottomLayout->addStretch();
     bottomLayout->addWidget(settingsButton);
@@ -3448,7 +3448,7 @@ void BattleWidget::onItemButton2Clicked() {
         itemButton2->hide();
         item2used=true;
         QTimer::singleShot(2000 , this, [this](){
-
+            startRound();
         });
     }else{
         QTimer::singleShot(0 , this, [this](){
